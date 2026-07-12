@@ -1,0 +1,42 @@
+generated: '2026-07-12'
+method: derived
+source: https://codeberg.org/swagger.v1.json
+summary:
+  types:
+  - apiKey
+  - basic
+  - oauth2
+schemes:
+- name: AuthorizationHeaderToken
+  type: apiKey
+  in: header
+  parameterName: Authorization
+  description: 'Personal access token (PAT). Must be prepended with the word "token"
+    followed by a space, e.g. `Authorization: token YOUR_TOKEN`. Create tokens in
+    Codeberg account settings under Applications.'
+  sources:
+  - https://codeberg.org/swagger.v1.json
+  - https://docs.codeberg.org/advanced/api-usage/
+- name: OAuth2
+  type: oauth2
+  description: Codeberg (Forgejo) can act as an OAuth2 provider so third-party
+    applications can obtain access on a user's behalf. Register an OAuth2
+    application under the user or organization settings.
+  sources:
+  - https://docs.codeberg.org/advanced/api-usage/
+- name: BasicAuth
+  type: basic
+  description: HTTP Basic authentication with username and password. When two-factor
+    authentication is enabled it must be combined with a one-time password sent in
+    the `X-FORGEJO-OTP` header.
+  sources:
+  - https://codeberg.org/swagger.v1.json
+notes: >-
+  Token auth (Authorization header, prefixed with "token") is the recommended
+  method for API access. Public repository reads are largely available
+  unauthenticated. The Sudo header/param and admin-only schemes documented in the
+  Forgejo Swagger are omitted here as they require instance-admin privileges not
+  available to general Codeberg users.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

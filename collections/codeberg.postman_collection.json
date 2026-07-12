@@ -1,0 +1,1505 @@
+{
+  "info": {
+    "name": "Codeberg API (Forgejo)",
+    "description": "Core subset of the Forgejo/Gitea-compatible REST API served by Codeberg, the community-run non-profit Git hosting platform. Base URL: https://codeberg.org/api/v1. Authenticate with a personal access token sent as `Authorization: token YOUR_TOKEN`. Grounded in the live Swagger at https://codeberg.org/swagger.v1.json.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "token {{codebergToken}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://codeberg.org/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "codebergToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Repositories",
+      "item": [
+        {
+          "name": "Search for repositories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                "search"
+              ]
+            },
+            "description": "Search for repositories by keyword."
+          }
+        },
+        {
+          "name": "Get a repository",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a single repository by owner and name."
+          }
+        },
+        {
+          "name": "Edit a repository",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Edit a repository's properties. Only fields that are set will be changed.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Delete a repository",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Delete a repository."
+          }
+        },
+        {
+          "name": "List your repositories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/repos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "repos"
+              ]
+            },
+            "description": "List the repos that the authenticated user owns."
+          }
+        },
+        {
+          "name": "Create a repository",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/user/repos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "repos"
+              ]
+            },
+            "description": "Create a repository for the authenticated user.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"my-repo\",\n  \"private\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "List branches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/branches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "branches"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "List a repository's branches."
+          }
+        },
+        {
+          "name": "Create a branch",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/branches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "branches"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Create a branch.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"new_branch_name\": \"feature\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List tags",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/tags",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "tags"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "List a repository's tags."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Issues",
+      "item": [
+        {
+          "name": "Search issues",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/issues/search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                "issues",
+                "search"
+              ]
+            },
+            "description": "Search for issues across the repositories that the user has access to."
+          }
+        },
+        {
+          "name": "List issues",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/issues",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "issues"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "List a repository's issues."
+          }
+        },
+        {
+          "name": "Create an issue",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/issues",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "issues"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Create an issue in a repository.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Bug report\",\n  \"body\": \"Description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get an issue",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/issues/:index",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "issues",
+                ":index"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "index",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a single issue by index."
+          }
+        },
+        {
+          "name": "Edit an issue",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/issues/:index",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "issues",
+                ":index"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "index",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Edit an issue.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "List issue comments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/issues/:index/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "issues",
+                ":index",
+                "comments"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "index",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "List all comments on an issue."
+          }
+        },
+        {
+          "name": "Create issue comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/issues/:index/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "issues",
+                ":index",
+                "comments"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "index",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Add a comment to an issue.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"A comment\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pull Requests",
+      "item": [
+        {
+          "name": "List pull requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/pulls",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "pulls"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "List a repo's pull requests."
+          }
+        },
+        {
+          "name": "Create a pull request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/pulls",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "pulls"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Create a pull request.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My PR\",\n  \"head\": \"feature\",\n  \"base\": \"main\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get a pull request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/pulls/:index",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "pulls",
+                ":index"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "index",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a single pull request by index."
+          }
+        },
+        {
+          "name": "Update a pull request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/pulls/:index",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "pulls",
+                ":index"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "index",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Update a pull request.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Check if PR is merged",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/pulls/:index/merge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "pulls",
+                ":index",
+                "merge"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "index",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Check if a pull request has been merged."
+          }
+        },
+        {
+          "name": "Merge a pull request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/pulls/:index/merge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "pulls",
+                ":index",
+                "merge"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "index",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Merge a pull request.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Do\": \"merge\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Releases",
+      "item": [
+        {
+          "name": "List releases",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/releases",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "releases"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "List a repo's releases."
+          }
+        },
+        {
+          "name": "Create a release",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/releases",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "releases"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Create a release.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tag_name\": \"v1.0.0\",\n  \"name\": \"v1.0.0\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get latest release",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/releases/latest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "releases",
+                "latest"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Gets the most recent non-prerelease, non-draft release."
+          }
+        },
+        {
+          "name": "Get a release",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/releases/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "releases",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a release by ID."
+          }
+        },
+        {
+          "name": "Update a release",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/releases/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "releases",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Update a release.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Delete a release",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/releases/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "releases",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Delete a release."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Git Content",
+      "item": [
+        {
+          "name": "Get file or dir contents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/contents/:filepath",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "contents",
+                ":filepath"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "filepath",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Gets the metadata and contents (if a file) of an entry, or a list of entries if a dir."
+          }
+        },
+        {
+          "name": "Create a file",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/contents/:filepath",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "contents",
+                ":filepath"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "filepath",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Create a file in a repository.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"base64-encoded-content\",\n  \"message\": \"Add file\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update a file",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/contents/:filepath",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "contents",
+                ":filepath"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "filepath",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Update a file in a repository.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"base64-encoded-content\",\n  \"message\": \"Update file\",\n  \"sha\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete a file",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/contents/:filepath",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "contents",
+                ":filepath"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "filepath",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Delete a file in a repository.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Delete file\",\n  \"sha\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get raw file",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/raw/:filepath",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "raw",
+                ":filepath"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "filepath",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a file from a repository (raw bytes)."
+          }
+        },
+        {
+          "name": "List commits",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/commits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "commits"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a list of all commits from a repository."
+          }
+        },
+        {
+          "name": "Get tree",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repos/:owner/:repo/git/trees/:sha",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo",
+                "git",
+                "trees",
+                ":sha"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": ""
+                },
+                {
+                  "key": "repo",
+                  "value": ""
+                },
+                {
+                  "key": "sha",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Gets the tree of a repository."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users and Organizations",
+      "item": [
+        {
+          "name": "Get authenticated user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user"
+              ]
+            },
+            "description": "Get the authenticated user."
+          }
+        },
+        {
+          "name": "Search users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "search"
+              ]
+            },
+            "description": "Search for users."
+          }
+        },
+        {
+          "name": "Get a user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/:username",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":username"
+              ],
+              "variable": [
+                {
+                  "key": "username",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a user by username."
+          }
+        },
+        {
+          "name": "List user repos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/:username/repos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":username",
+                "repos"
+              ],
+              "variable": [
+                {
+                  "key": "username",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "List the repos owned by the given user."
+          }
+        },
+        {
+          "name": "Get an organization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orgs/:org",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orgs",
+                ":org"
+              ],
+              "variable": [
+                {
+                  "key": "org",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get an organization."
+          }
+        },
+        {
+          "name": "Edit an organization",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orgs/:org",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orgs",
+                ":org"
+              ],
+              "variable": [
+                {
+                  "key": "org",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Edit an organization.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "List org repos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orgs/:org/repos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orgs",
+                ":org",
+                "repos"
+              ],
+              "variable": [
+                {
+                  "key": "org",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "List an organization's repos."
+          }
+        },
+        {
+          "name": "Create org repo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orgs/:org/repos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orgs",
+                ":org",
+                "repos"
+              ],
+              "variable": [
+                {
+                  "key": "org",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Create a repository in an organization.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"my-repo\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get server version",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/version",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "version"
+              ]
+            },
+            "description": "Returns the version of the running application."
+          }
+        }
+      ]
+    }
+  ]
+}

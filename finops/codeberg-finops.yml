@@ -1,0 +1,74 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Codeberg
+providerId: codeberg
+created: '2026-07-12'
+modified: '2026-07-12'
+reconciled: false
+tags:
+- Code Hosting
+- Git
+- Open Source
+- Non-Profit
+- FinOps
+- Cost Management
+description: >-
+  FinOps view of Codeberg spend. Codeberg is a donation-funded non-profit
+  (Codeberg e.V.) that provides Git hosting and a Forgejo/Gitea-compatible API at
+  no charge. There is no vendor invoice, no metered API billing, and no paid
+  tier - so from a consumer's perspective there is no direct cloud spend to
+  manage against Codeberg. The relevant financial dimension is voluntary support
+  (donations or association membership) that keeps the shared service running,
+  plus, for organizations that need guaranteed capacity or control, the
+  alternative cost of self-hosting Forgejo on their own infrastructure.
+notes: >-
+  Because Codeberg does not bill for usage, standard usage-metering FinOps
+  columns do not apply. The honest cost signals are (1) voluntary donations /
+  membership to sustain the non-profit, and (2) the infrastructure cost of
+  self-hosting Forgejo if an organization chooses to run its own instance rather
+  than rely on the shared community service. No FOCUS billing export exists.
+sources:
+- https://codeberg.org
+- https://docs.codeberg.org
+- https://forgejo.org/
+- https://www.finops.org/framework/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Codeberg e.V.
+serviceCategory: Developer Tools and Code Hosting
+billingModel:
+  pricingCategory: Free
+  billingFrequency: None
+  billingCurrency: EUR
+  chargeCategories:
+  - Purchase
+meters:
+- name: donations
+  description: Voluntary donations to Codeberg e.V. that fund the platform. Not tied to API usage.
+  unit: currency
+  aggregation: sum
+  dimensions:
+  - contributor
+- name: self_hosted_compute
+  description: Infrastructure cost of self-hosting Forgejo instead of using the shared Codeberg instance (no Codeberg invoice).
+  unit: hours
+  aggregation: sum
+  dimensions:
+  - deployment
+principles:
+- name: Visibility
+  description: There is no Codeberg invoice to track; instead track any voluntary donation/membership spend and, if self-hosting, the infrastructure cost of running Forgejo.
+- name: Allocation
+  description: If self-hosting Forgejo for internal teams, tag the hosting infrastructure per team/workload; on codeberg.org there is nothing to allocate.
+- name: Optimization
+  description: Use the shared non-profit instance responsibly under fair use to avoid the cost of self-hosting; self-host only when guaranteed capacity, privacy, or control justifies the infrastructure spend.
+- name: Accountability
+  description: Decide as an organization whether to financially support Codeberg e.V. commensurate with reliance on the free service, and review self-hosting costs against that support.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

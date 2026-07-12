@@ -1,0 +1,1113 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Codeberg API (Forgejo)",
+    "version": "15.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "token {{codebergToken}}",
+      "in": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Repositories",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search for repositories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/search"
+          },
+          "docs": "Search for repositories by keyword."
+        },
+        {
+          "info": {
+            "name": "Get a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a single repository by owner and name."
+        },
+        {
+          "info": {
+            "name": "Edit a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Edit a repository's properties. Only fields that are set will be changed."
+        },
+        {
+          "info": {
+            "name": "Delete a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a repository."
+        },
+        {
+          "info": {
+            "name": "List your repositories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/user/repos"
+          },
+          "docs": "List the repos that the authenticated user owns."
+        },
+        {
+          "info": {
+            "name": "Create a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/user/repos",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"my-repo\",\n  \"private\": false\n}"
+            }
+          },
+          "docs": "Create a repository for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "List branches",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/branches",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List a repository's branches."
+        },
+        {
+          "info": {
+            "name": "Create a branch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/branches",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"new_branch_name\": \"feature\"\n}"
+            }
+          },
+          "docs": "Create a branch."
+        },
+        {
+          "info": {
+            "name": "List tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/tags",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List a repository's tags."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Issues",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search issues",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/issues/search"
+          },
+          "docs": "Search for issues across the repositories that the user has access to."
+        },
+        {
+          "info": {
+            "name": "List issues",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List a repository's issues."
+        },
+        {
+          "info": {
+            "name": "Create an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"title\": \"Bug report\",\n  \"body\": \"Description\"\n}"
+            }
+          },
+          "docs": "Create an issue in a repository."
+        },
+        {
+          "info": {
+            "name": "Get an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues/:index",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a single issue by index."
+        },
+        {
+          "info": {
+            "name": "Edit an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues/:index",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Edit an issue."
+        },
+        {
+          "info": {
+            "name": "List issue comments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues/:index/comments",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List all comments on an issue."
+        },
+        {
+          "info": {
+            "name": "Create issue comment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues/:index/comments",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"body\": \"A comment\"\n}"
+            }
+          },
+          "docs": "Add a comment to an issue."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Pull Requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List pull requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/pulls",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List a repo's pull requests."
+        },
+        {
+          "info": {
+            "name": "Create a pull request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/pulls",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"title\": \"My PR\",\n  \"head\": \"feature\",\n  \"base\": \"main\"\n}"
+            }
+          },
+          "docs": "Create a pull request."
+        },
+        {
+          "info": {
+            "name": "Get a pull request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/pulls/:index",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a single pull request by index."
+        },
+        {
+          "info": {
+            "name": "Update a pull request",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/pulls/:index",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a pull request."
+        },
+        {
+          "info": {
+            "name": "Check if PR is merged",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/pulls/:index/merge",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Check if a pull request has been merged."
+        },
+        {
+          "info": {
+            "name": "Merge a pull request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/pulls/:index/merge",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"Do\": \"merge\"\n}"
+            }
+          },
+          "docs": "Merge a pull request."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Releases",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List releases",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List a repo's releases."
+        },
+        {
+          "info": {
+            "name": "Create a release",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"tag_name\": \"v1.0.0\",\n  \"name\": \"v1.0.0\"\n}"
+            }
+          },
+          "docs": "Create a release."
+        },
+        {
+          "info": {
+            "name": "Get latest release",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases/latest",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets the most recent non-prerelease, non-draft release."
+        },
+        {
+          "info": {
+            "name": "Get a release",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases/:id",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a release by ID."
+        },
+        {
+          "info": {
+            "name": "Update a release",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases/:id",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a release."
+        },
+        {
+          "info": {
+            "name": "Delete a release",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases/:id",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a release."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Git Content",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get file or dir contents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/contents/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets the metadata and contents (if a file) of an entry, or a list of entries if a dir."
+        },
+        {
+          "info": {
+            "name": "Create a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/contents/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"content\": \"base64-encoded-content\",\n  \"message\": \"Add file\"\n}"
+            }
+          },
+          "docs": "Create a file in a repository."
+        },
+        {
+          "info": {
+            "name": "Update a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/contents/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"content\": \"base64-encoded-content\",\n  \"message\": \"Update file\",\n  \"sha\": \"\"\n}"
+            }
+          },
+          "docs": "Update a file in a repository."
+        },
+        {
+          "info": {
+            "name": "Delete a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/contents/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"message\": \"Delete file\",\n  \"sha\": \"\"\n}"
+            }
+          },
+          "docs": "Delete a file in a repository."
+        },
+        {
+          "info": {
+            "name": "Get raw file",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/raw/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a file from a repository (raw bytes)."
+        },
+        {
+          "info": {
+            "name": "List commits",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/commits",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a list of all commits from a repository."
+        },
+        {
+          "info": {
+            "name": "Get tree",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/git/trees/:sha",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "sha",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets the tree of a repository."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Users and Organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get authenticated user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/user"
+          },
+          "docs": "Get the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Search users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/users/search"
+          },
+          "docs": "Search for users."
+        },
+        {
+          "info": {
+            "name": "Get a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/users/:username",
+            "params": [
+              {
+                "name": "username",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a user by username."
+        },
+        {
+          "info": {
+            "name": "List user repos",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/users/:username/repos",
+            "params": [
+              {
+                "name": "username",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List the repos owned by the given user."
+        },
+        {
+          "info": {
+            "name": "Get an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/orgs/:org",
+            "params": [
+              {
+                "name": "org",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get an organization."
+        },
+        {
+          "info": {
+            "name": "Edit an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://codeberg.org/api/v1/orgs/:org",
+            "params": [
+              {
+                "name": "org",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Edit an organization."
+        },
+        {
+          "info": {
+            "name": "List org repos",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/orgs/:org/repos",
+            "params": [
+              {
+                "name": "org",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List an organization's repos."
+        },
+        {
+          "info": {
+            "name": "Create org repo",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/orgs/:org/repos",
+            "params": [
+              {
+                "name": "org",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"my-repo\"\n}"
+            }
+          },
+          "docs": "Create a repository in an organization."
+        },
+        {
+          "info": {
+            "name": "Get server version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/version"
+          },
+          "docs": "Returns the version of the running application."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,189 @@
+aid: codeberg
+url: https://raw.githubusercontent.com/api-evangelist/codeberg/refs/heads/main/apis.yml
+name: Codeberg
+kind: company
+description: Codeberg is a community-run, non-profit platform for hosting Git
+  repositories and collaborating on free and open source software, operated by the
+  Codeberg e.V. association in Germany. It runs on Forgejo (a community fork of
+  Gitea) and exposes the Forgejo/Gitea-compatible REST API at
+  https://codeberg.org/api/v1 for repositories, issues, pull requests, releases,
+  Git content, users, and organizations. Access is free and donation-funded;
+  requests authenticate with a personal access token or OAuth2.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Code Hosting
+- Git
+- Git Hosting
+- Version Control
+- Repositories
+- Pull Requests
+- Issue Tracking
+- Open Source
+- Forgejo
+- Non-Profit
+created: '2026-07-12'
+modified: '2026-07-12'
+specificationVersion: '0.19'
+apis:
+- aid: codeberg:codeberg-repositories-api
+  name: Codeberg Repositories API
+  tags:
+  - Repositories
+  - Git Hosting
+  - Branches
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  properties:
+  - url: https://docs.codeberg.org/advanced/api-usage/
+    type: Documentation
+  - url: https://codeberg.org/api/swagger
+    type: APIReference
+  - url: openapi/codeberg-openapi.yml
+    type: OpenAPI
+  - url: collections/codeberg.postman_collection.json
+    type: PostmanCollection
+  - url: collections/codeberg.opencollection.json
+    type: OpenCollection
+  description: Create, search, get, edit, and delete Git repositories, and list and
+    create branches and tags. The core repository surface of the Forgejo/Gitea API,
+    covering both user-owned and organization-owned repositories.
+- aid: codeberg:codeberg-issues-api
+  name: Codeberg Issues API
+  tags:
+  - Issue Tracking
+  - Issues
+  - Comments
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  properties:
+  - url: https://docs.codeberg.org/advanced/api-usage/
+    type: Documentation
+  - url: https://codeberg.org/api/swagger
+    type: APIReference
+  - url: openapi/codeberg-openapi.yml
+    type: OpenAPI
+  - url: collections/codeberg.postman_collection.json
+    type: PostmanCollection
+  - url: collections/codeberg.opencollection.json
+    type: OpenCollection
+  description: List, search, create, get, edit, and comment on issues within a
+    repository. Supports cross-repository issue search across repositories the
+    authenticated user can access.
+- aid: codeberg:codeberg-pull-requests-api
+  name: Codeberg Pull Requests API
+  tags:
+  - Pull Requests
+  - Code Review
+  - Merge
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  properties:
+  - url: https://docs.codeberg.org/advanced/api-usage/
+    type: Documentation
+  - url: https://codeberg.org/api/swagger
+    type: APIReference
+  - url: openapi/codeberg-openapi.yml
+    type: OpenAPI
+  - url: collections/codeberg.postman_collection.json
+    type: PostmanCollection
+  - url: collections/codeberg.opencollection.json
+    type: OpenCollection
+  description: List, create, get, and update pull requests, check whether a pull
+    request has been merged, and merge it. The code-review and contribution surface
+    of the Forgejo/Gitea API.
+- aid: codeberg:codeberg-users-organizations-api
+  name: Codeberg Users and Organizations API
+  tags:
+  - Users
+  - Organizations
+  - Profiles
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  properties:
+  - url: https://docs.codeberg.org/advanced/api-usage/
+    type: Documentation
+  - url: https://codeberg.org/api/swagger
+    type: APIReference
+  - url: openapi/codeberg-openapi.yml
+    type: OpenAPI
+  - url: collections/codeberg.postman_collection.json
+    type: PostmanCollection
+  - url: collections/codeberg.opencollection.json
+    type: OpenCollection
+  description: Get the authenticated user, look up and search users, list who a user
+    follows and is followed by, and get and manage organizations and the
+    repositories they own.
+- aid: codeberg:codeberg-releases-api
+  name: Codeberg Releases API
+  tags:
+  - Releases
+  - Tags
+  - Distribution
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  properties:
+  - url: https://docs.codeberg.org/advanced/api-usage/
+    type: Documentation
+  - url: https://codeberg.org/api/swagger
+    type: APIReference
+  - url: openapi/codeberg-openapi.yml
+    type: OpenAPI
+  - url: collections/codeberg.postman_collection.json
+    type: PostmanCollection
+  - url: collections/codeberg.opencollection.json
+    type: OpenCollection
+  description: List, create, get, update, and delete repository releases, and fetch
+    the latest non-prerelease release. Releases attach downloadable assets to Git
+    tags.
+- aid: codeberg:codeberg-git-content-api
+  name: Codeberg Git Content API
+  tags:
+  - Git Content
+  - Files
+  - Commits
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  properties:
+  - url: https://docs.codeberg.org/advanced/api-usage/
+    type: Documentation
+  - url: https://codeberg.org/api/swagger
+    type: APIReference
+  - url: openapi/codeberg-openapi.yml
+    type: OpenAPI
+  - url: collections/codeberg.postman_collection.json
+    type: PostmanCollection
+  - url: collections/codeberg.opencollection.json
+    type: OpenCollection
+  description: Read and write repository contents - list directory entries, get and
+    create, update, or delete files, fetch raw file bytes, list commits, and read
+    the Git tree. The file-and-content surface of the Forgejo/Gitea API.
+common:
+- type: DomainSecurity
+  url: security/codeberg-domain-security.yml
+- type: Authentication
+  url: authentication/codeberg-authentication.yml
+- type: GitHubOrganization
+  url: https://github.com/forgejo/forgejo
+- type: Fediverse
+  url: https://social.anoxinon.de/@codeberg
+- type: Website
+  url: https://codeberg.org
+- type: Documentation
+  url: https://docs.codeberg.org
+- type: Plans
+  url: plans/codeberg-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/codeberg-rate-limits.yml
+- type: FinOps
+  url: finops/codeberg-finops.yml
+- url: https://blog.codeberg.org/
+  type: Blog
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

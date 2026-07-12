@@ -1,0 +1,133 @@
+aid: codeberg
+name: Codeberg
+review:
+  question: Does Codeberg expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-12'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Codeberg's public programmable surface is
+    the Forgejo/Gitea-compatible REST API at https://codeberg.org/api/v1, which
+    is request/response HTTPS. Forgejo's server-to-client eventing is delivered
+    by outbound webhooks (the server POSTs JSON to a consumer-configured HTTP
+    endpoint on repository, issue, and pull-request events) - not a WebSocket
+    channel Codeberg exposes for clients to connect to. There is no documented
+    wss:// endpoint and no server-push transport on Codeberg's own API to model.
+findings:
+  summary: |
+    Codeberg does not publish a documented public WebSocket API. Codeberg is a
+    community-run, non-profit Git hosting platform operated by Codeberg e.V. and
+    built on Forgejo (a community fork of Gitea). Its programmable surface is the
+    Forgejo/Gitea-compatible REST API served live at https://codeberg.org/api/v1,
+    with a machine-readable Swagger 2.0 document at
+    https://codeberg.org/swagger.v1.json and an interactive UI at
+    https://codeberg.org/api/swagger. The running application self-reported
+    version 15.0.0-209-2308e484+gitea-1.22.0 via GET /api/v1/version at review
+    time. Authentication is by personal access token sent as
+    `Authorization: token YOUR_TOKEN`, by OAuth2, or by HTTP Basic auth
+    (optionally combined with a TOTP header when two-factor auth is enabled).
+    Server-to-client events are delivered via configurable outbound webhooks, not
+    a WebSocket. No realtime, bidirectional, or streaming WebSocket (ws:// or
+    wss://) endpoint is documented on Codeberg's API.
+  openSource: |
+    Codeberg runs on Forgejo, a copyleft community fork of Gitea, and is itself a
+    non-profit dedicated to free and open source software. The Forgejo software is
+    open source (Forgejo relicensed the codebase under GPLv3; the Gitea lineage it
+    forked from is MIT). The same REST API surface documented here is available on
+    any self-hosted Forgejo or Gitea instance, not only on codeberg.org.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://codeberg.org/api/v1
+      documented: true
+      note: Forgejo/Gitea-compatible REST API. Live Swagger 2.0 at https://codeberg.org/swagger.v1.json.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Server POSTs JSON event payloads to a consumer-configured HTTP endpoint (repo/org/user hooks). Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Codeberg's API reference or Forgejo API as of the review date.
+  endpointsConfirmedRest:
+    - GET    https://codeberg.org/api/v1/version
+    - GET    https://codeberg.org/api/v1/repos/search
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}
+    - PATCH  https://codeberg.org/api/v1/repos/{owner}/{repo}
+    - DELETE https://codeberg.org/api/v1/repos/{owner}/{repo}
+    - GET    https://codeberg.org/api/v1/user/repos
+    - POST   https://codeberg.org/api/v1/user/repos
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/branches
+    - POST   https://codeberg.org/api/v1/repos/{owner}/{repo}/branches
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/tags
+    - GET    https://codeberg.org/api/v1/repos/issues/search
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/issues
+    - POST   https://codeberg.org/api/v1/repos/{owner}/{repo}/issues
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/issues/{index}
+    - PATCH  https://codeberg.org/api/v1/repos/{owner}/{repo}/issues/{index}
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/issues/{index}/comments
+    - POST   https://codeberg.org/api/v1/repos/{owner}/{repo}/issues/{index}/comments
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/pulls
+    - POST   https://codeberg.org/api/v1/repos/{owner}/{repo}/pulls
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/pulls/{index}
+    - PATCH  https://codeberg.org/api/v1/repos/{owner}/{repo}/pulls/{index}
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/pulls/{index}/merge
+    - POST   https://codeberg.org/api/v1/repos/{owner}/{repo}/pulls/{index}/merge
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/releases
+    - POST   https://codeberg.org/api/v1/repos/{owner}/{repo}/releases
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/releases/latest
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/releases/{id}
+    - PATCH  https://codeberg.org/api/v1/repos/{owner}/{repo}/releases/{id}
+    - DELETE https://codeberg.org/api/v1/repos/{owner}/{repo}/releases/{id}
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/contents/{filepath}
+    - POST   https://codeberg.org/api/v1/repos/{owner}/{repo}/contents/{filepath}
+    - PUT    https://codeberg.org/api/v1/repos/{owner}/{repo}/contents/{filepath}
+    - DELETE https://codeberg.org/api/v1/repos/{owner}/{repo}/contents/{filepath}
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/raw/{filepath}
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/commits
+    - GET    https://codeberg.org/api/v1/repos/{owner}/{repo}/git/trees/{sha}
+    - GET    https://codeberg.org/api/v1/user
+    - GET    https://codeberg.org/api/v1/users/search
+    - GET    https://codeberg.org/api/v1/users/{username}
+    - GET    https://codeberg.org/api/v1/users/{username}/repos
+    - GET    https://codeberg.org/api/v1/orgs/{org}
+    - PATCH  https://codeberg.org/api/v1/orgs/{org}
+    - GET    https://codeberg.org/api/v1/orgs/{org}/repos
+    - POST   https://codeberg.org/api/v1/orgs/{org}/repos
+  endpointsModeled: []
+  confirmationNote: |
+    The endpoint list was grounded in the live Swagger 2.0 document fetched from
+    https://codeberg.org/swagger.v1.json (315 paths total; Forgejo API title,
+    basePath /api/v1). The subset above and in the OpenAPI is drawn verbatim from
+    that document. GET /api/v1/version was additionally called live and returned
+    {"version":"15.0.0-209-2308e484+gitea-1.22.0"}. None of the endpoints are
+    modeled or speculative.
+sources:
+  - url: https://codeberg.org/swagger.v1.json
+    type: OpenAPI
+    note: Live Forgejo Swagger 2.0, basePath /api/v1, 315 paths. Authoritative source for the endpoint subset.
+  - url: https://codeberg.org/api/swagger
+    type: APIReference
+    note: Interactive Swagger UI for the Codeberg/Forgejo API.
+  - url: https://docs.codeberg.org/advanced/api-usage/
+    type: Documentation
+    note: Codeberg API usage guide - token auth, base URL, examples.
+  - url: https://docs.codeberg.org/getting-started/first-repository/
+    type: Documentation
+    note: Codeberg getting-started documentation.
+  - url: https://forgejo.org/
+    type: SourceCode
+    note: Forgejo - the open-source software Codeberg runs; community fork of Gitea.
+  - url: https://codeberg.org/api/v1/version
+    type: APIReference
+    note: Live version endpoint; returned 15.0.0-209-2308e484+gitea-1.22.0 at review time.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Codeberg's own public API is
+    request/response REST (Forgejo/Gitea-compatible) plus outbound webhooks for
+    server-to-endpoint eventing. No AsyncAPI document was created because there is
+    no client-facing server-push transport (WebSocket or SSE) on Codeberg's API
+    to model.

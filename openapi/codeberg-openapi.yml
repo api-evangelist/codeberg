@@ -1,0 +1,651 @@
+openapi: 3.0.3
+info:
+  title: Codeberg API (Forgejo)
+  description: >-
+    Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the
+    community-run non-profit Git hosting platform, at https://codeberg.org/api/v1.
+    Codeberg runs Forgejo (a community fork of Gitea); the reported application
+    version at review time was 15.0.0-209+gitea-1.22.0. This document captures the
+    core repository, issue, pull request, release, Git content, user, and
+    organization paths. It is a representative subset - the full, authoritative
+    machine-readable specification is served live by Codeberg at
+    https://codeberg.org/swagger.v1.json (interactive UI at
+    https://codeberg.org/api/swagger). Authenticate with a personal access token
+    sent as `Authorization: token YOUR_TOKEN`, or via OAuth2.
+  version: '15.0.0'
+  contact:
+    name: Codeberg
+    url: https://codeberg.org
+  license:
+    name: MIT (Forgejo software)
+    url: https://forgejo.org/
+servers:
+  - url: https://codeberg.org/api/v1
+    description: Codeberg production
+security:
+  - AuthorizationHeaderToken: []
+tags:
+  - name: Repositories
+    description: Create, search, get, edit, and delete repositories and their branches and tags.
+  - name: Issues
+    description: List, search, create, get, edit, and comment on issues.
+  - name: Pull Requests
+    description: List, create, get, update, and merge pull requests.
+  - name: Releases
+    description: Manage repository releases attached to Git tags.
+  - name: Git Content
+    description: Read and write repository files, list commits, and read the Git tree.
+  - name: Users
+    description: Look up and search users and the authenticated account.
+  - name: Organizations
+    description: Get and manage organizations and their repositories.
+  - name: Miscellaneous
+    description: Server metadata.
+paths:
+  /version:
+    get:
+      operationId: getVersion
+      tags:
+        - Miscellaneous
+      summary: Returns the version of the running application
+      responses:
+        '200':
+          description: Server version string.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+  /repos/search:
+    get:
+      operationId: repoSearch
+      tags:
+        - Repositories
+      summary: Search for repositories
+      parameters:
+        - name: q
+          in: query
+          description: Keyword to search for.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Page size of results.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of matching repositories.
+  /repos/{owner}/{repo}:
+    get:
+      operationId: repoGet
+      tags:
+        - Repositories
+      summary: Get a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: The requested repository.
+    patch:
+      operationId: repoEdit
+      tags:
+        - Repositories
+      summary: Edit a repository's properties. Only fields that are set will be changed.
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: The updated repository.
+    delete:
+      operationId: repoDelete
+      tags:
+        - Repositories
+      summary: Delete a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '204':
+          description: Repository deleted.
+  /user/repos:
+    get:
+      operationId: userCurrentListRepos
+      tags:
+        - Repositories
+      summary: List the repos that the authenticated user owns
+      responses:
+        '200':
+          description: A list of repositories.
+    post:
+      operationId: createCurrentUserRepo
+      tags:
+        - Repositories
+      summary: Create a repository
+      responses:
+        '201':
+          description: The created repository.
+  /repos/{owner}/{repo}/branches:
+    get:
+      operationId: repoListBranches
+      tags:
+        - Repositories
+      summary: List a repository's branches
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of branches.
+    post:
+      operationId: repoCreateBranch
+      tags:
+        - Repositories
+      summary: Create a branch
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '201':
+          description: The created branch.
+  /repos/{owner}/{repo}/tags:
+    get:
+      operationId: repoListTags
+      tags:
+        - Repositories
+      summary: List a repository's tags
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of tags.
+  /repos/issues/search:
+    get:
+      operationId: issueSearchIssues
+      tags:
+        - Issues
+      summary: Search for issues across the repositories that the user has access to
+      parameters:
+        - name: q
+          in: query
+          description: Search string.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of matching issues.
+  /repos/{owner}/{repo}/issues:
+    get:
+      operationId: issueListIssues
+      tags:
+        - Issues
+      summary: List a repository's issues
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of issues.
+    post:
+      operationId: issueCreateIssue
+      tags:
+        - Issues
+      summary: Create an issue. If using deadline only the date will be taken into account.
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '201':
+          description: The created issue.
+  /repos/{owner}/{repo}/issues/{index}:
+    get:
+      operationId: issueGetIssue
+      tags:
+        - Issues
+      summary: Get an issue
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: The requested issue.
+    patch:
+      operationId: issueEditIssue
+      tags:
+        - Issues
+      summary: Edit an issue
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '201':
+          description: The updated issue.
+  /repos/{owner}/{repo}/issues/{index}/comments:
+    get:
+      operationId: issueGetComments
+      tags:
+        - Issues
+      summary: List all comments on an issue
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: A list of comments.
+    post:
+      operationId: issueCreateComment
+      tags:
+        - Issues
+      summary: Add a comment to an issue
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '201':
+          description: The created comment.
+  /repos/{owner}/{repo}/pulls:
+    get:
+      operationId: repoListPullRequests
+      tags:
+        - Pull Requests
+      summary: List a repo's pull requests
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of pull requests.
+    post:
+      operationId: repoCreatePullRequest
+      tags:
+        - Pull Requests
+      summary: Create a pull request
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '201':
+          description: The created pull request.
+  /repos/{owner}/{repo}/pulls/{index}:
+    get:
+      operationId: repoGetPullRequest
+      tags:
+        - Pull Requests
+      summary: Get a pull request
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: The requested pull request.
+    patch:
+      operationId: repoEditPullRequest
+      tags:
+        - Pull Requests
+      summary: Update a pull request
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '201':
+          description: The updated pull request.
+  /repos/{owner}/{repo}/pulls/{index}/merge:
+    get:
+      operationId: repoPullRequestIsMerged
+      tags:
+        - Pull Requests
+      summary: Check if a pull request has been merged
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '204':
+          description: The pull request has been merged.
+        '404':
+          description: The pull request has not been merged.
+    post:
+      operationId: repoMergePullRequest
+      tags:
+        - Pull Requests
+      summary: Merge a pull request
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: The pull request was merged.
+  /repos/{owner}/{repo}/releases:
+    get:
+      operationId: repoListReleases
+      tags:
+        - Releases
+      summary: List a repo's releases
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of releases.
+    post:
+      operationId: repoCreateRelease
+      tags:
+        - Releases
+      summary: Create a release
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '201':
+          description: The created release.
+  /repos/{owner}/{repo}/releases/latest:
+    get:
+      operationId: repoGetLatestRelease
+      tags:
+        - Releases
+      summary: Gets the most recent non-prerelease, non-draft release of a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: The latest release.
+  /repos/{owner}/{repo}/releases/{id}:
+    get:
+      operationId: repoGetRelease
+      tags:
+        - Releases
+      summary: Get a release
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - name: id
+          in: path
+          required: true
+          description: ID of the release.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The requested release.
+    patch:
+      operationId: repoEditRelease
+      tags:
+        - Releases
+      summary: Update a release
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - name: id
+          in: path
+          required: true
+          description: ID of the release.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The updated release.
+    delete:
+      operationId: repoDeleteRelease
+      tags:
+        - Releases
+      summary: Delete a release
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - name: id
+          in: path
+          required: true
+          description: ID of the release.
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Release deleted.
+  /repos/{owner}/{repo}/contents/{filepath}:
+    get:
+      operationId: repoGetContents
+      tags:
+        - Git Content
+      summary: Gets the metadata and contents (if a file) of an entry in a repository, or a list of entries if a dir
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/filepath'
+      responses:
+        '200':
+          description: File or directory contents.
+    post:
+      operationId: repoCreateFile
+      tags:
+        - Git Content
+      summary: Create a file in a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/filepath'
+      responses:
+        '201':
+          description: The created file.
+    put:
+      operationId: repoUpdateFile
+      tags:
+        - Git Content
+      summary: Update a file in a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/filepath'
+      responses:
+        '200':
+          description: The updated file.
+    delete:
+      operationId: repoDeleteFile
+      tags:
+        - Git Content
+      summary: Delete a file in a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/filepath'
+      responses:
+        '200':
+          description: The file was deleted.
+  /repos/{owner}/{repo}/raw/{filepath}:
+    get:
+      operationId: repoGetRawFile
+      tags:
+        - Git Content
+      summary: Get a file from a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/filepath'
+      responses:
+        '200':
+          description: Raw file bytes.
+  /repos/{owner}/{repo}/commits:
+    get:
+      operationId: repoGetAllCommits
+      tags:
+        - Git Content
+      summary: Get a list of all commits from a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of commits.
+  /repos/{owner}/{repo}/git/trees/{sha}:
+    get:
+      operationId: getTree
+      tags:
+        - Git Content
+      summary: Gets the tree of a repository
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - name: sha
+          in: path
+          required: true
+          description: SHA of the commit or tree.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The Git tree.
+  /user:
+    get:
+      operationId: userGetCurrent
+      tags:
+        - Users
+      summary: Get the authenticated user
+      responses:
+        '200':
+          description: The authenticated user.
+  /users/search:
+    get:
+      operationId: userSearch
+      tags:
+        - Users
+      summary: Search for users
+      parameters:
+        - name: q
+          in: query
+          description: Keyword to search for.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of matching users.
+  /users/{username}:
+    get:
+      operationId: userGet
+      tags:
+        - Users
+      summary: Get a user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: Username of the user to get.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The requested user.
+  /users/{username}/repos:
+    get:
+      operationId: userListRepos
+      tags:
+        - Users
+      summary: List the repos owned by the given user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: Username of the user.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of repositories.
+  /orgs/{org}:
+    get:
+      operationId: orgGet
+      tags:
+        - Organizations
+      summary: Get an organization
+      parameters:
+        - $ref: '#/components/parameters/org'
+      responses:
+        '200':
+          description: The requested organization.
+    patch:
+      operationId: orgEdit
+      tags:
+        - Organizations
+      summary: Edit an organization
+      parameters:
+        - $ref: '#/components/parameters/org'
+      responses:
+        '200':
+          description: The updated organization.
+  /orgs/{org}/repos:
+    get:
+      operationId: orgListRepos
+      tags:
+        - Organizations
+      summary: List an organization's repos
+      parameters:
+        - $ref: '#/components/parameters/org'
+      responses:
+        '200':
+          description: A list of repositories.
+    post:
+      operationId: createOrgRepo
+      tags:
+        - Organizations
+      summary: Create a repository in an organization
+      parameters:
+        - $ref: '#/components/parameters/org'
+      responses:
+        '201':
+          description: The created repository.
+components:
+  securitySchemes:
+    AuthorizationHeaderToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >-
+        Personal access token. Must be prepended with the word "token" followed
+        by a space, e.g. `Authorization: token YOUR_TOKEN`.
+  parameters:
+    owner:
+      name: owner
+      in: path
+      required: true
+      description: Owner of the repository (user or organization).
+      schema:
+        type: string
+    repo:
+      name: repo
+      in: path
+      required: true
+      description: Name of the repository.
+      schema:
+        type: string
+    index:
+      name: index
+      in: path
+      required: true
+      description: Index (number) of the issue or pull request within the repository.
+      schema:
+        type: integer
+    filepath:
+      name: filepath
+      in: path
+      required: true
+      description: Path of the file or directory within the repository.
+      schema:
+        type: string
+    org:
+      name: org
+      in: path
+      required: true
+      description: Name of the organization.
+      schema:
+        type: string

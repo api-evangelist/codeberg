@@ -1,0 +1,80 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Codeberg
+providerId: codeberg
+created: '2026-07-12'
+modified: '2026-07-12'
+reconciled: false
+tags:
+- Code Hosting
+- Git
+- Open Source
+- Non-Profit
+- Plans
+description: >-
+  Codeberg is a registered non-profit (Codeberg e.V.) and does not sell paid API
+  or hosting tiers. Hosting of Git repositories and use of the Forgejo/Gitea API
+  are free of charge, funded by donations and voluntary membership in the
+  association. There is one effective access model: free community hosting for
+  free and open source software, subject to fair-use expectations. Members and
+  donors support the service financially but do not receive a different API tier.
+notes: >-
+  There is no metered or paid API pricing to reconcile. "Membership" and
+  "donation" below are voluntary financial support of the non-profit, not paid
+  service tiers or API entitlements. Verify current membership fees and donation
+  options on codeberg.org and about the Codeberg e.V. association.
+sources:
+- https://codeberg.org
+- https://docs.codeberg.org
+- https://blog.codeberg.org/
+- https://codeberg.org/api/swagger
+plans:
+- id: codeberg-free
+  name: Free Community Hosting
+  type: free
+  description: >-
+    Free hosting of Git repositories and full use of the Forgejo/Gitea-compatible
+    REST API for free and open source software. No paid tier and no API fees.
+    Subject to fair-use expectations for the shared community service.
+  entries:
+  - label: Repository Hosting and API Access
+    name: free_hosting
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free (donation-funded non-profit)
+    userMultiplied: false
+  elements:
+  - name: Public and Private Repositories
+  - name: Issues and Pull Requests
+  - name: Releases and Packages
+  - name: Forgejo/Gitea REST API
+  - name: Personal Access Tokens and OAuth2
+- id: codeberg-membership
+  name: Codeberg e.V. Membership / Donation
+  type: free
+  description: >-
+    Voluntary membership in or donation to the Codeberg e.V. association that
+    funds the platform. This is financial support for the non-profit, not a paid
+    service tier - it does not unlock a different API or higher limits.
+  entries:
+  - label: Voluntary Support
+    name: membership
+    type: flat
+    metric: contribution
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: voluntary (see codeberg.org / Codeberg e.V.)
+    userMultiplied: false
+  elements:
+  - name: Supports the Non-Profit
+  - name: Optional Association Membership
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

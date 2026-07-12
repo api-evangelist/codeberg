@@ -1,0 +1,60 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Codeberg
+providerId: codeberg
+created: '2026-07-12'
+modified: '2026-07-12'
+reconciled: false
+tags:
+- Code Hosting
+- Git
+- Non-Profit
+- Rate Limiting
+- Quotas
+description: >-
+  Codeberg does not publish fixed numeric per-account API rate limits. As a
+  donation-funded non-profit running Forgejo, it relies on fair-use expectations
+  rather than a documented per-minute request cap: automated and API use should
+  be reasonable and must not degrade the shared community service. Heavy
+  scraping, bulk cloning, or aggressive automation is discouraged and may be
+  throttled or blocked at the instance and CDN level. Forgejo supports optional
+  per-instance rate limiting configured by administrators, but Codeberg does not
+  publish specific numeric thresholds.
+notes: >-
+  No documented numeric per-endpoint or per-token Management limit exists as of
+  the review date. Clients should paginate, cache, back off on errors, and avoid
+  bulk automation. Prefer authenticated requests with a personal access token so
+  traffic is attributable. Respect any Retry-After header returned on throttling.
+sources:
+- https://docs.codeberg.org/advanced/api-usage/
+- https://codeberg.org
+- https://forgejo.org/
+responseCodes:
+  throttled: 429
+limits:
+- name: API Requests
+  scope: account
+  metric: requests
+  limit: not published
+  notes: No fixed numeric per-account API request-rate limit is documented; fair-use expectations apply.
+- name: Fair Use
+  scope: instance
+  metric: requests
+  limit: reasonable use
+  notes: Automated/API use must not degrade the shared community service; abusive traffic may be throttled or blocked.
+- name: Bulk Automation
+  scope: account
+  metric: operations
+  limit: discouraged
+  notes: Heavy scraping, bulk cloning, and aggressive automation are discouraged on the non-profit instance.
+policies:
+- name: Fair Use
+  description: Codeberg is a shared non-profit resource; API consumers are expected to use it reasonably and not harm availability for the community.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor any Retry-After header on 429 responses.
+- name: Pagination and Caching
+  description: Use pagination parameters and cache responses to minimize load rather than repeatedly polling large collections.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
