@@ -164,6 +164,8 @@ apis:
     create, update, or delete files, fetch raw file bytes, list commits, and read
     the Git tree. The file-and-content surface of the Forgejo/Gitea API.
 common:
+- type: AgenticAccess
+  url: agentic-access/codeberg-agentic-access.yml
 - type: DomainSecurity
   url: security/codeberg-domain-security.yml
 - type: Authentication
