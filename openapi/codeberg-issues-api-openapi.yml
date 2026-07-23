@@ -1,0 +1,137 @@
+openapi: 3.0.3
+info:
+  title: Codeberg API (Forgejo) Git Content Issues API
+  description: 'Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the community-run non-profit Git hosting platform, at https://codeberg.org/api/v1. Codeberg runs Forgejo (a community fork of Gitea); the reported application version at review time was 15.0.0-209+gitea-1.22.0. This document captures the core repository, issue, pull request, release, Git content, user, and organization paths. It is a representative subset - the full, authoritative machine-readable specification is served live by Codeberg at https://codeberg.org/swagger.v1.json (interactive UI at https://codeberg.org/api/swagger). Authenticate with a personal access token sent as `Authorization: token YOUR_TOKEN`, or via OAuth2.'
+  version: 15.0.0
+  contact:
+    name: Codeberg
+    url: https://codeberg.org
+  license:
+    name: MIT (Forgejo software)
+    url: https://forgejo.org/
+servers:
+- url: https://codeberg.org/api/v1
+  description: Codeberg production
+security:
+- AuthorizationHeaderToken: []
+tags:
+- name: Issues
+  description: List, search, create, get, edit, and comment on issues.
+paths:
+  /repos/issues/search:
+    get:
+      operationId: issueSearchIssues
+      tags:
+      - Issues
+      summary: Search for issues across the repositories that the user has access to
+      parameters:
+      - name: q
+        in: query
+        description: Search string.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of matching issues.
+  /repos/{owner}/{repo}/issues:
+    get:
+      operationId: issueListIssues
+      tags:
+      - Issues
+      summary: List a repository's issues
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of issues.
+    post:
+      operationId: issueCreateIssue
+      tags:
+      - Issues
+      summary: Create an issue. If using deadline only the date will be taken into account.
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      responses:
+        '201':
+          description: The created issue.
+  /repos/{owner}/{repo}/issues/{index}:
+    get:
+      operationId: issueGetIssue
+      tags:
+      - Issues
+      summary: Get an issue
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: The requested issue.
+    patch:
+      operationId: issueEditIssue
+      tags:
+      - Issues
+      summary: Edit an issue
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - $ref: '#/components/parameters/index'
+      responses:
+        '201':
+          description: The updated issue.
+  /repos/{owner}/{repo}/issues/{index}/comments:
+    get:
+      operationId: issueGetComments
+      tags:
+      - Issues
+      summary: List all comments on an issue
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: A list of comments.
+    post:
+      operationId: issueCreateComment
+      tags:
+      - Issues
+      summary: Add a comment to an issue
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - $ref: '#/components/parameters/index'
+      responses:
+        '201':
+          description: The created comment.
+components:
+  parameters:
+    repo:
+      name: repo
+      in: path
+      required: true
+      description: Name of the repository.
+      schema:
+        type: string
+    index:
+      name: index
+      in: path
+      required: true
+      description: Index (number) of the issue or pull request within the repository.
+      schema:
+        type: integer
+    owner:
+      name: owner
+      in: path
+      required: true
+      description: Owner of the repository (user or organization).
+      schema:
+        type: string
+  securitySchemes:
+    AuthorizationHeaderToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Personal access token. Must be prepended with the word "token" followed by a space, e.g. `Authorization: token YOUR_TOKEN`.'

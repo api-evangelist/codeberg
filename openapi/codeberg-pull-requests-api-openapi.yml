@@ -1,0 +1,124 @@
+openapi: 3.0.3
+info:
+  title: Codeberg API (Forgejo) Git Content Pull Requests API
+  description: 'Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the community-run non-profit Git hosting platform, at https://codeberg.org/api/v1. Codeberg runs Forgejo (a community fork of Gitea); the reported application version at review time was 15.0.0-209+gitea-1.22.0. This document captures the core repository, issue, pull request, release, Git content, user, and organization paths. It is a representative subset - the full, authoritative machine-readable specification is served live by Codeberg at https://codeberg.org/swagger.v1.json (interactive UI at https://codeberg.org/api/swagger). Authenticate with a personal access token sent as `Authorization: token YOUR_TOKEN`, or via OAuth2.'
+  version: 15.0.0
+  contact:
+    name: Codeberg
+    url: https://codeberg.org
+  license:
+    name: MIT (Forgejo software)
+    url: https://forgejo.org/
+servers:
+- url: https://codeberg.org/api/v1
+  description: Codeberg production
+security:
+- AuthorizationHeaderToken: []
+tags:
+- name: Pull Requests
+  description: List, create, get, update, and merge pull requests.
+paths:
+  /repos/{owner}/{repo}/pulls:
+    get:
+      operationId: repoListPullRequests
+      tags:
+      - Pull Requests
+      summary: List a repo's pull requests
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of pull requests.
+    post:
+      operationId: repoCreatePullRequest
+      tags:
+      - Pull Requests
+      summary: Create a pull request
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      responses:
+        '201':
+          description: The created pull request.
+  /repos/{owner}/{repo}/pulls/{index}:
+    get:
+      operationId: repoGetPullRequest
+      tags:
+      - Pull Requests
+      summary: Get a pull request
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: The requested pull request.
+    patch:
+      operationId: repoEditPullRequest
+      tags:
+      - Pull Requests
+      summary: Update a pull request
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - $ref: '#/components/parameters/index'
+      responses:
+        '201':
+          description: The updated pull request.
+  /repos/{owner}/{repo}/pulls/{index}/merge:
+    get:
+      operationId: repoPullRequestIsMerged
+      tags:
+      - Pull Requests
+      summary: Check if a pull request has been merged
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - $ref: '#/components/parameters/index'
+      responses:
+        '204':
+          description: The pull request has been merged.
+        '404':
+          description: The pull request has not been merged.
+    post:
+      operationId: repoMergePullRequest
+      tags:
+      - Pull Requests
+      summary: Merge a pull request
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: The pull request was merged.
+components:
+  parameters:
+    repo:
+      name: repo
+      in: path
+      required: true
+      description: Name of the repository.
+      schema:
+        type: string
+    index:
+      name: index
+      in: path
+      required: true
+      description: Index (number) of the issue or pull request within the repository.
+      schema:
+        type: integer
+    owner:
+      name: owner
+      in: path
+      required: true
+      description: Owner of the repository (user or organization).
+      schema:
+        type: string
+  securitySchemes:
+    AuthorizationHeaderToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Personal access token. Must be prepended with the word "token" followed by a space, e.g. `Authorization: token YOUR_TOKEN`.'

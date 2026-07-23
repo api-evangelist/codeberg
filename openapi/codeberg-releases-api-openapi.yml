@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Codeberg API (Forgejo) Git Content Releases API
+  description: 'Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the community-run non-profit Git hosting platform, at https://codeberg.org/api/v1. Codeberg runs Forgejo (a community fork of Gitea); the reported application version at review time was 15.0.0-209+gitea-1.22.0. This document captures the core repository, issue, pull request, release, Git content, user, and organization paths. It is a representative subset - the full, authoritative machine-readable specification is served live by Codeberg at https://codeberg.org/swagger.v1.json (interactive UI at https://codeberg.org/api/swagger). Authenticate with a personal access token sent as `Authorization: token YOUR_TOKEN`, or via OAuth2.'
+  version: 15.0.0
+  contact:
+    name: Codeberg
+    url: https://codeberg.org
+  license:
+    name: MIT (Forgejo software)
+    url: https://forgejo.org/
+servers:
+- url: https://codeberg.org/api/v1
+  description: Codeberg production
+security:
+- AuthorizationHeaderToken: []
+tags:
+- name: Releases
+  description: Manage repository releases attached to Git tags.
+paths:
+  /repos/{owner}/{repo}/releases:
+    get:
+      operationId: repoListReleases
+      tags:
+      - Releases
+      summary: List a repo's releases
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: A list of releases.
+    post:
+      operationId: repoCreateRelease
+      tags:
+      - Releases
+      summary: Create a release
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      responses:
+        '201':
+          description: The created release.
+  /repos/{owner}/{repo}/releases/latest:
+    get:
+      operationId: repoGetLatestRelease
+      tags:
+      - Releases
+      summary: Gets the most recent non-prerelease, non-draft release of a repository
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      responses:
+        '200':
+          description: The latest release.
+  /repos/{owner}/{repo}/releases/{id}:
+    get:
+      operationId: repoGetRelease
+      tags:
+      - Releases
+      summary: Get a release
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - name: id
+        in: path
+        required: true
+        description: ID of the release.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: The requested release.
+    patch:
+      operationId: repoEditRelease
+      tags:
+      - Releases
+      summary: Update a release
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - name: id
+        in: path
+        required: true
+        description: ID of the release.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: The updated release.
+    delete:
+      operationId: repoDeleteRelease
+      tags:
+      - Releases
+      summary: Delete a release
+      parameters:
+      - $ref: '#/components/parameters/owner'
+      - $ref: '#/components/parameters/repo'
+      - name: id
+        in: path
+        required: true
+        description: ID of the release.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Release deleted.
+components:
+  parameters:
+    repo:
+      name: repo
+      in: path
+      required: true
+      description: Name of the repository.
+      schema:
+        type: string
+    owner:
+      name: owner
+      in: path
+      required: true
+      description: Owner of the repository (user or organization).
+      schema:
+        type: string
+  securitySchemes:
+    AuthorizationHeaderToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Personal access token. Must be prepended with the word "token" followed by a space, e.g. `Authorization: token YOUR_TOKEN`.'
