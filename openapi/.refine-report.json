@@ -1,0 +1,28 @@
+{
+  "provider": "codeberg",
+  "sources": [
+    "codeberg-git-content-api-openapi.yml",
+    "codeberg-issues-api-openapi.yml",
+    "codeberg-miscellaneous-api-openapi.yml",
+    "codeberg-organizations-api-openapi.yml",
+    "codeberg-pull-requests-api-openapi.yml",
+    "codeberg-releases-api-openapi.yml",
+    "codeberg-repositories-api-openapi.yml",
+    "codeberg-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "codeberg-git-content-api-openapi.yml",
+    "codeberg-issues-api-openapi.yml",
+    "codeberg-miscellaneous-api-openapi.yml",
+    "codeberg-organizations-api-openapi.yml",
+    "codeberg-pull-requests-api-openapi.yml",
+    "codeberg-releases-api-openapi.yml",
+    "codeberg-repositories-api-openapi.yml",
+    "codeberg-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

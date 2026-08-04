@@ -1,0 +1,21 @@
+{
+  "repo": "codeberg",
+  "feeds": [
+    {
+      "source": "https://blog.codeberg.org/feeds/all.atom.xml",
+      "feed_url": "https://blog.codeberg.org/feeds/all.atom.xml",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
+      "source": "https://blog.codeberg.org/",
+      "feed_url": "https://blog.codeberg.org/feeds/all.atom.xml",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    }
+  ],
+  "post_count": 50,
+  "fetched": "2026-08-01T15:49:00Z"
+}
