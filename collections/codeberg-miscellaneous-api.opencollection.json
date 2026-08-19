@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Codeberg API (Forgejo) Git Content Miscellaneous API",
+    "version": "15.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Miscellaneous",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Returns the version of the running application",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/version"
+          },
+          "docs": "Returns the version of the running application"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

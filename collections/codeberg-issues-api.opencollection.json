@@ -1,0 +1,219 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Codeberg API (Forgejo) Git Content Issues API",
+    "version": "15.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Issues",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search for issues across the repositories that the user has access to",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/issues/search",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "Search string."
+              }
+            ]
+          },
+          "docs": "Search for issues across the repositories that the user has access to"
+        },
+        {
+          "info": {
+            "name": "List a repository's issues",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "List a repository's issues"
+        },
+        {
+          "info": {
+            "name": "Create an issue. If using deadline only the date will be taken into account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "Create an issue. If using deadline only the date will be taken into account."
+        },
+        {
+          "info": {
+            "name": "Get an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues/:index",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index (number) of the issue or pull request within the repository."
+              }
+            ]
+          },
+          "docs": "Get an issue"
+        },
+        {
+          "info": {
+            "name": "Edit an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues/:index",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index (number) of the issue or pull request within the repository."
+              }
+            ]
+          },
+          "docs": "Edit an issue"
+        },
+        {
+          "info": {
+            "name": "List all comments on an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues/:index/comments",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index (number) of the issue or pull request within the repository."
+              }
+            ]
+          },
+          "docs": "List all comments on an issue"
+        },
+        {
+          "info": {
+            "name": "Add a comment to an issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/issues/:index/comments",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Index (number) of the issue or pull request within the repository."
+              }
+            ]
+          },
+          "docs": "Add a comment to an issue"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

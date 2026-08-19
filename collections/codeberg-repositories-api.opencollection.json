@@ -1,0 +1,223 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Codeberg API (Forgejo) Git Content Repositories API",
+    "version": "15.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Repositories",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search for repositories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/search",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "Keyword to search for."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Page size of results."
+              }
+            ]
+          },
+          "docs": "Search for repositories"
+        },
+        {
+          "info": {
+            "name": "Get a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "Get a repository"
+        },
+        {
+          "info": {
+            "name": "Edit a repository's properties. Only fields that are set will be changed.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "Edit a repository's properties. Only fields that are set will be changed."
+        },
+        {
+          "info": {
+            "name": "Delete a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "Delete a repository"
+        },
+        {
+          "info": {
+            "name": "List the repos that the authenticated user owns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/user/repos"
+          },
+          "docs": "List the repos that the authenticated user owns"
+        },
+        {
+          "info": {
+            "name": "Create a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/user/repos"
+          },
+          "docs": "Create a repository"
+        },
+        {
+          "info": {
+            "name": "List a repository's branches",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/branches",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "List a repository's branches"
+        },
+        {
+          "info": {
+            "name": "Create a branch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/branches",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "Create a branch"
+        },
+        {
+          "info": {
+            "name": "List a repository's tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/tags",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "List a repository's tags"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

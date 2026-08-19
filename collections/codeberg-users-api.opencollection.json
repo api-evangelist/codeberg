@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Codeberg API (Forgejo) Git Content Users API",
+    "version": "15.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the authenticated user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/user"
+          },
+          "docs": "Get the authenticated user"
+        },
+        {
+          "info": {
+            "name": "Search for users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/users/search",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "Keyword to search for."
+              }
+            ]
+          },
+          "docs": "Search for users"
+        },
+        {
+          "info": {
+            "name": "Get a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/users/:username",
+            "params": [
+              {
+                "name": "username",
+                "value": "",
+                "type": "path",
+                "description": "Username of the user to get."
+              }
+            ]
+          },
+          "docs": "Get a user"
+        },
+        {
+          "info": {
+            "name": "List the repos owned by the given user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/users/:username/repos",
+            "params": [
+              {
+                "name": "username",
+                "value": "",
+                "type": "path",
+                "description": "Username of the user."
+              }
+            ]
+          },
+          "docs": "List the repos owned by the given user"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

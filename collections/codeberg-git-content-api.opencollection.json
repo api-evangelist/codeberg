@@ -1,0 +1,237 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Codeberg API (Forgejo) Git Content API",
+    "version": "15.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Git Content",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets the metadata and contents (if a file) of an entry in a repository, or a list of entries if a dir",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/contents/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path",
+                "description": "Path of the file or directory within the repository."
+              }
+            ]
+          },
+          "docs": "Gets the metadata and contents (if a file) of an entry in a repository, or a list of entries if a dir"
+        },
+        {
+          "info": {
+            "name": "Create a file in a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/contents/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path",
+                "description": "Path of the file or directory within the repository."
+              }
+            ]
+          },
+          "docs": "Create a file in a repository"
+        },
+        {
+          "info": {
+            "name": "Update a file in a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/contents/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path",
+                "description": "Path of the file or directory within the repository."
+              }
+            ]
+          },
+          "docs": "Update a file in a repository"
+        },
+        {
+          "info": {
+            "name": "Delete a file in a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/contents/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path",
+                "description": "Path of the file or directory within the repository."
+              }
+            ]
+          },
+          "docs": "Delete a file in a repository"
+        },
+        {
+          "info": {
+            "name": "Get a file from a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/raw/:filepath",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "filepath",
+                "value": "",
+                "type": "path",
+                "description": "Path of the file or directory within the repository."
+              }
+            ]
+          },
+          "docs": "Get a file from a repository"
+        },
+        {
+          "info": {
+            "name": "Get a list of all commits from a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/commits",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "Get a list of all commits from a repository"
+        },
+        {
+          "info": {
+            "name": "Gets the tree of a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/git/trees/:sha",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "sha",
+                "value": "",
+                "type": "path",
+                "description": "SHA of the commit or tree."
+              }
+            ]
+          },
+          "docs": "Gets the tree of a repository"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

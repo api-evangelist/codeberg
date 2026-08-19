@@ -1,0 +1,194 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Codeberg API (Forgejo) Git Content Releases API",
+    "version": "15.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Releases",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List a repo's releases",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "List a repo's releases"
+        },
+        {
+          "info": {
+            "name": "Create a release",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "Create a release"
+        },
+        {
+          "info": {
+            "name": "Gets the most recent non-prerelease, non-draft release of a repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases/latest",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              }
+            ]
+          },
+          "docs": "Gets the most recent non-prerelease, non-draft release of a repository"
+        },
+        {
+          "info": {
+            "name": "Get a release",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases/:id",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the release."
+              }
+            ]
+          },
+          "docs": "Get a release"
+        },
+        {
+          "info": {
+            "name": "Update a release",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases/:id",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the release."
+              }
+            ]
+          },
+          "docs": "Update a release"
+        },
+        {
+          "info": {
+            "name": "Delete a release",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://codeberg.org/api/v1/repos/:owner/:repo/releases/:id",
+            "params": [
+              {
+                "name": "owner",
+                "value": "",
+                "type": "path",
+                "description": "Owner of the repository (user or organization)."
+              },
+              {
+                "name": "repo",
+                "value": "",
+                "type": "path",
+                "description": "Name of the repository."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the release."
+              }
+            ]
+          },
+          "docs": "Delete a release"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
