@@ -36,7 +36,7 @@ tags:
 - Non-Profit
 created: '2026-07-12'
 modified: '2026-07-12'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: codeberg:codeberg-git-content-api
   name: Codeberg Git Content API
