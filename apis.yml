@@ -31,6 +31,17 @@ tags:
 - Repositories
 - Pull Requests
 - Issue Tracking
+- Open-Source
+- Forgejo
+- Non-Profit
+tags_raw:
+- Code Hosting
+- Git
+- Git Hosting
+- Version Control
+- Repositories
+- Pull Requests
+- Issue Tracking
 - Open Source
 - Forgejo
 - Non-Profit
@@ -79,7 +90,8 @@ apis:
   description: Server metadata.
   humanURL: https://codeberg.org/api/swagger
   baseURL: https://codeberg.org/api/v1
-  tags:
+  tags: []
+  tags_raw:
   - Miscellaneous
   properties:
   - type: OpenAPI
@@ -98,6 +110,8 @@ apis:
   humanURL: https://codeberg.org/api/swagger
   baseURL: https://codeberg.org/api/v1
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -170,6 +184,8 @@ apis:
   humanURL: https://codeberg.org/api/swagger
   baseURL: https://codeberg.org/api/v1
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
