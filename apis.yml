@@ -9,6 +9,18 @@ description: Codeberg is a community-run, non-profit platform for hosting Git
   https://codeberg.org/api/v1 for repositories, issues, pull requests, releases,
   Git content, users, and organizations. Access is free and donation-funded;
   requests authenticate with a personal access token or OAuth2.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: free
   onboarding: self-serve
