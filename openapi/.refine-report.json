@@ -1,14 +1,7 @@
 {
   "provider": "codeberg",
   "sources": [
-    "codeberg-git-content-api-openapi.yml",
-    "codeberg-issues-api-openapi.yml",
-    "codeberg-miscellaneous-api-openapi.yml",
-    "codeberg-organizations-api-openapi.yml",
-    "codeberg-pull-requests-api-openapi.yml",
-    "codeberg-releases-api-openapi.yml",
-    "codeberg-repositories-api-openapi.yml",
-    "codeberg-users-api-openapi.yml"
+    "_original/codeberg-openapi.yml"
   ],
   "outputs": [
     "codeberg-git-content-api-openapi.yml",
@@ -23,6 +16,19 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "codeberg-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "codeberg-git-content-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "codeberg-issues-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "codeberg-miscellaneous-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "codeberg-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "codeberg-pull-requests-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "codeberg-releases-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "codeberg-repositories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "codeberg-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

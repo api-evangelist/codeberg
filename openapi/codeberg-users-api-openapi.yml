@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Codeberg API (Forgejo) Git Content Users API
-  description: 'Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the community-run non-profit Git hosting platform, at https://codeberg.org/api/v1. Codeberg runs Forgejo (a community fork of Gitea); the reported application version at review time was 15.0.0-209+gitea-1.22.0. This document captures the core repository, issue, pull request, release, Git content, user, and organization paths. It is a representative subset - the full, authoritative machine-readable specification is served live by Codeberg at https://codeberg.org/swagger.v1.json (interactive UI at https://codeberg.org/api/swagger). Authenticate with a personal access token sent as `Authorization: token YOUR_TOKEN`, or via OAuth2.'
+  title: Codeberg API (Forgejo) Users API
+  description: Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the community-run non-profit Git hosting platform, at https://codeberg.org/api/v1.
   version: 15.0.0
   contact:
     name: Codeberg

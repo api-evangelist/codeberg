@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Codeberg API (Forgejo) Git Content Issues API
-  description: 'Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the community-run non-profit Git hosting platform, at https://codeberg.org/api/v1. Codeberg runs Forgejo (a community fork of Gitea); the reported application version at review time was 15.0.0-209+gitea-1.22.0. This document captures the core repository, issue, pull request, release, Git content, user, and organization paths. It is a representative subset - the full, authoritative machine-readable specification is served live by Codeberg at https://codeberg.org/swagger.v1.json (interactive UI at https://codeberg.org/api/swagger). Authenticate with a personal access token sent as `Authorization: token YOUR_TOKEN`, or via OAuth2.'
+  title: Codeberg API (Forgejo) Issues API
+  description: Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the community-run non-profit Git hosting platform, at https://codeberg.org/api/v1.
   version: 15.0.0
   contact:
     name: Codeberg
@@ -49,7 +49,7 @@ paths:
       operationId: issueCreateIssue
       tags:
       - Issues
-      summary: Create an issue. If using deadline only the date will be taken into account.
+      summary: Create an issue. If using deadline only the date will be taken into account
       parameters:
       - $ref: '#/components/parameters/owner'
       - $ref: '#/components/parameters/repo'
@@ -108,11 +108,11 @@ paths:
           description: The created comment.
 components:
   parameters:
-    repo:
-      name: repo
+    owner:
+      name: owner
       in: path
       required: true
-      description: Name of the repository.
+      description: Owner of the repository (user or organization).
       schema:
         type: string
     index:
@@ -122,11 +122,11 @@ components:
       description: Index (number) of the issue or pull request within the repository.
       schema:
         type: integer
-    owner:
-      name: owner
+    repo:
+      name: repo
       in: path
       required: true
-      description: Owner of the repository (user or organization).
+      description: Name of the repository.
       schema:
         type: string
   securitySchemes:
