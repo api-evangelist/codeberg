@@ -43,7 +43,7 @@ tags:
 - Repositories
 - Pull Requests
 - Issue Tracking
-- Open-Source
+- Open Source
 - Forgejo
 - Non-Profit
 tags_raw:
@@ -57,6 +57,7 @@ tags_raw:
 - Open Source
 - Forgejo
 - Non-Profit
+- Open-Source
 created: '2026-07-12'
 modified: '2026-07-12'
 specificationVersion: '0.23'
