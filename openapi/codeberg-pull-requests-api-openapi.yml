@@ -95,13 +95,6 @@ paths:
           description: The pull request was merged.
 components:
   parameters:
-    repo:
-      name: repo
-      in: path
-      required: true
-      description: Name of the repository.
-      schema:
-        type: string
     owner:
       name: owner
       in: path
@@ -116,6 +109,13 @@ components:
       description: Index (number) of the issue or pull request within the repository.
       schema:
         type: integer
+    repo:
+      name: repo
+      in: path
+      required: true
+      description: Name of the repository.
+      schema:
+        type: string
   securitySchemes:
     AuthorizationHeaderToken:
       type: apiKey
