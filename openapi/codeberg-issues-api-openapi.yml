@@ -108,13 +108,6 @@ paths:
           description: The created comment.
 components:
   parameters:
-    owner:
-      name: owner
-      in: path
-      required: true
-      description: Owner of the repository (user or organization).
-      schema:
-        type: string
     index:
       name: index
       in: path
@@ -122,6 +115,13 @@ components:
       description: Index (number) of the issue or pull request within the repository.
       schema:
         type: integer
+    owner:
+      name: owner
+      in: path
+      required: true
+      description: Owner of the repository (user or organization).
+      schema:
+        type: string
     repo:
       name: repo
       in: path

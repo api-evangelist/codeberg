@@ -112,18 +112,18 @@ paths:
           description: The Git tree.
 components:
   parameters:
-    filepath:
-      name: filepath
-      in: path
-      required: true
-      description: Path of the file or directory within the repository.
-      schema:
-        type: string
     owner:
       name: owner
       in: path
       required: true
       description: Owner of the repository (user or organization).
+      schema:
+        type: string
+    filepath:
+      name: filepath
+      in: path
+      required: true
+      description: Path of the file or directory within the repository.
       schema:
         type: string
     repo:
