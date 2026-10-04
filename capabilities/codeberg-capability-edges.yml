@@ -1,0 +1,66 @@
+slug: codeberg
+provider: Codeberg
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 5
+edges:
+- tag: Pull Requests
+  spec_file: codeberg-pull-requests-api-openapi.yml
+  capability_id: BC-4200.40
+  capability_id_l1: BC-4200
+  capability_name: Software Construction Management
+  confidence: 0.88
+  evidence: repoCreatePullRequest 'Create a pull request'; repoMergePullRequest 'Merge a pull request'
+  reason: Pull-request creation, review and merge is the code-review and collaborative-coding discipline
+    of software construction management.
+- tag: Git Content
+  spec_file: codeberg-git-content-api-openapi.yml
+  capability_id: BC-4200.40
+  capability_id_l1: BC-4200
+  capability_name: Software Construction Management
+  confidence: 0.85
+  evidence: repoCreateFile 'Create a file in a repository'; repoGetAllCommits 'Get a list of all commits
+    from a repository'; getTree 'Gets the tree of a repository'
+  reason: Read/write of repository file contents, commits and trees is source-control practice, i.e. software
+    construction management on a Git hosting platform.
+- tag: Releases
+  spec_file: codeberg-releases-api-openapi.yml
+  capability_id: BC-4210.30
+  capability_id_l1: BC-4210
+  capability_name: Release Engineering Management
+  confidence: 0.78
+  evidence: repoCreateRelease 'Create a release'; repoGetLatestRelease 'Gets the most recent non-prerelease,
+    non-draft release of a repository'
+  reason: Versioned release artefacts with draft/prerelease states correspond to release engineering (cadence,
+    versioning, release notes) for software projects.
+- tag: Repositories
+  spec_file: codeberg-repositories-api-openapi.yml
+  capability_id: BC-4200.40
+  capability_id_l1: BC-4200
+  capability_name: Software Construction Management
+  confidence: 0.75
+  evidence: POST /user/repos createCurrentUserRepo Create a repository; GET /repos/{owner}/{repo}/branches
+    repoListBranches List a repository's branches
+  reason: Operations create, edit, delete Git repositories and manage branches/tags — source-control practice,
+    which is Software Construction Management. Some chance the better home is a generic developer-platform
+    capability, hence 0.75.
+- tag: Issues
+  spec_file: codeberg-issues-api-openapi.yml
+  capability_id: BC-4200
+  capability_id_l1: BC-4200
+  capability_name: Software Product Engineering Management
+  confidence: 0.7
+  evidence: issueCreateIssue 'Create an issue. If using deadline only the date will be taken into account';
+    issueCreateComment 'Add a comment to an issue'
+  reason: Issue tracking on a code-hosting platform supports software engineering work items — spanning
+    defect management and backlog items — so L1 Software Product Engineering Management is supported but
+    no single L2 is unambiguous.

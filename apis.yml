@@ -212,6 +212,9 @@ apis:
   - type: OpenCollection
     url: collections/codeberg.opencollection.json
 common:
+- type: CapabilityMap
+  url: capabilities/codeberg-capability-edges.yml
+  name: Codeberg Business Capability Map
 - type: AgenticAccess
   url: agentic-access/codeberg-agentic-access.yml
 - type: DomainSecurity
