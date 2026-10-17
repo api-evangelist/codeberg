@@ -119,18 +119,18 @@ components:
       description: Owner of the repository (user or organization).
       schema:
         type: string
-    filepath:
-      name: filepath
-      in: path
-      required: true
-      description: Path of the file or directory within the repository.
-      schema:
-        type: string
     repo:
       name: repo
       in: path
       required: true
       description: Name of the repository.
+      schema:
+        type: string
+    filepath:
+      name: filepath
+      in: path
+      required: true
+      description: Path of the file or directory within the repository.
       schema:
         type: string
   securitySchemes:
