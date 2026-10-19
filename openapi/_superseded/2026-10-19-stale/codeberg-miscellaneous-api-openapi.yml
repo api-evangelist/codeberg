@@ -1,0 +1,43 @@
+openapi: 3.2.0
+info:
+  title: Codeberg API (Forgejo) Miscellaneous API
+  description: Core subset of the Forgejo/Gitea-compatible REST API exposed by Codeberg, the community-run non-profit Git hosting platform, at https://codeberg.org/api/v1.
+  version: 15.0.0
+  contact:
+    name: Codeberg
+    url: https://codeberg.org
+  license:
+    name: MIT (Forgejo software)
+    url: https://forgejo.org/
+servers:
+- url: https://codeberg.org/api/v1
+  description: Codeberg production
+security:
+- AuthorizationHeaderToken: []
+tags:
+- name: Miscellaneous
+  description: Server metadata.
+paths:
+  /version:
+    get:
+      operationId: getVersion
+      tags:
+      - Miscellaneous
+      summary: Returns the version of the running application
+      responses:
+        '200':
+          description: Server version string.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+components:
+  securitySchemes:
+    AuthorizationHeaderToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Personal access token. Must be prepended with the word "token" followed by a space, e.g. `Authorization: token YOUR_TOKEN`.'

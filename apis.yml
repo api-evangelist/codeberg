@@ -62,42 +62,6 @@ created: '2026-07-12'
 modified: '2026-07-12'
 specificationVersion: '0.23'
 apis:
-- aid: codeberg:codeberg-git-content-api
-  name: Codeberg Git Content API
-  description: Read and write repository files, list commits, and read the Git tree.
-  humanURL: https://codeberg.org/api/swagger
-  baseURL: https://codeberg.org/api/v1
-  tags:
-  - Git Content
-  properties:
-  - type: OpenAPI
-    url: openapi/codeberg-git-content-api-openapi.yml
-  - type: Documentation
-    url: https://docs.codeberg.org/advanced/api-usage/
-  - type: APIReference
-    url: https://codeberg.org/api/swagger
-  - type: PostmanCollection
-    url: collections/codeberg.postman_collection.json
-  - type: OpenCollection
-    url: collections/codeberg.opencollection.json
-- aid: codeberg:codeberg-issues-api
-  name: Codeberg Issues API
-  description: List, search, create, get, edit, and comment on issues.
-  humanURL: https://codeberg.org/api/swagger
-  baseURL: https://codeberg.org/api/v1
-  tags:
-  - Issues
-  properties:
-  - type: OpenAPI
-    url: openapi/codeberg-issues-api-openapi.yml
-  - type: Documentation
-    url: https://docs.codeberg.org/advanced/api-usage/
-  - type: APIReference
-    url: https://codeberg.org/api/swagger
-  - type: PostmanCollection
-    url: collections/codeberg.postman_collection.json
-  - type: OpenCollection
-    url: collections/codeberg.opencollection.json
 - aid: codeberg:codeberg-miscellaneous-api
   name: Codeberg Miscellaneous API
   description: Server metadata.
@@ -117,18 +81,16 @@ apis:
     url: collections/codeberg.postman_collection.json
   - type: OpenCollection
     url: collections/codeberg.opencollection.json
-- aid: codeberg:codeberg-organizations-api
-  name: Codeberg Organizations API
-  description: Get and manage organizations and their repositories.
+- aid: codeberg:codeberg-activitypub-api
+  name: Codeberg Activitypub API
+  description: The activitypub API from Codeberg — 11 operation(s) for activitypub.
   humanURL: https://codeberg.org/api/swagger
   baseURL: https://codeberg.org/api/v1
   tags:
-  - Organization
-  tags_raw:
-  - Organizations
+  - activitypub
   properties:
   - type: OpenAPI
-    url: openapi/codeberg-organizations-api-openapi.yml
+    url: openapi/codeberg-activitypub-api-openapi.yml
   - type: Documentation
     url: https://docs.codeberg.org/advanced/api-usage/
   - type: APIReference
@@ -137,16 +99,16 @@ apis:
     url: collections/codeberg.postman_collection.json
   - type: OpenCollection
     url: collections/codeberg.opencollection.json
-- aid: codeberg:codeberg-pull-requests-api
-  name: Codeberg Pull Requests API
-  description: List, create, get, update, and merge pull requests.
+- aid: codeberg:codeberg-admin-api
+  name: Codeberg Admin API
+  description: The admin API from Codeberg — 34 operation(s) for admin.
   humanURL: https://codeberg.org/api/swagger
   baseURL: https://codeberg.org/api/v1
   tags:
-  - Pull Requests
+  - admin
   properties:
   - type: OpenAPI
-    url: openapi/codeberg-pull-requests-api-openapi.yml
+    url: openapi/codeberg-admin-api-openapi.yml
   - type: Documentation
     url: https://docs.codeberg.org/advanced/api-usage/
   - type: APIReference
@@ -155,16 +117,16 @@ apis:
     url: collections/codeberg.postman_collection.json
   - type: OpenCollection
     url: collections/codeberg.opencollection.json
-- aid: codeberg:codeberg-releases-api
-  name: Codeberg Releases API
-  description: Manage repository releases attached to Git tags.
+- aid: codeberg:codeberg-issue-api
+  name: Codeberg Issue API
+  description: The issue API from Codeberg — 33 operation(s) for issue.
   humanURL: https://codeberg.org/api/swagger
   baseURL: https://codeberg.org/api/v1
   tags:
-  - Releases
+  - issue
   properties:
   - type: OpenAPI
-    url: openapi/codeberg-releases-api-openapi.yml
+    url: openapi/codeberg-issue-api-openapi.yml
   - type: Documentation
     url: https://docs.codeberg.org/advanced/api-usage/
   - type: APIReference
@@ -173,16 +135,16 @@ apis:
     url: collections/codeberg.postman_collection.json
   - type: OpenCollection
     url: collections/codeberg.opencollection.json
-- aid: codeberg:codeberg-repositories-api
-  name: Codeberg Repositories API
-  description: Create, search, get, edit, and delete repositories and their branches and tags.
+- aid: codeberg:codeberg-notification-api
+  name: Codeberg Notification API
+  description: The notification API from Codeberg — 4 operation(s) for notification.
   humanURL: https://codeberg.org/api/swagger
   baseURL: https://codeberg.org/api/v1
   tags:
-  - Repositories
+  - notification
   properties:
   - type: OpenAPI
-    url: openapi/codeberg-repositories-api-openapi.yml
+    url: openapi/codeberg-notification-api-openapi.yml
   - type: Documentation
     url: https://docs.codeberg.org/advanced/api-usage/
   - type: APIReference
@@ -191,18 +153,88 @@ apis:
     url: collections/codeberg.postman_collection.json
   - type: OpenCollection
     url: collections/codeberg.opencollection.json
-- aid: codeberg:codeberg-users-api
-  name: Codeberg Users API
-  description: Look up and search users and the authenticated account.
+- aid: codeberg:codeberg-organization-api
+  name: Codeberg Organization API
+  description: The organization API from Codeberg — 42 operation(s) for organization.
   humanURL: https://codeberg.org/api/swagger
   baseURL: https://codeberg.org/api/v1
   tags:
-  - User
-  tags_raw:
-  - Users
+  - organization
   properties:
   - type: OpenAPI
-    url: openapi/codeberg-users-api-openapi.yml
+    url: openapi/codeberg-organization-api-openapi.yml
+  - type: Documentation
+    url: https://docs.codeberg.org/advanced/api-usage/
+  - type: APIReference
+    url: https://codeberg.org/api/swagger
+  - type: PostmanCollection
+    url: collections/codeberg.postman_collection.json
+  - type: OpenCollection
+    url: collections/codeberg.opencollection.json
+- aid: codeberg:codeberg-package-api
+  name: Codeberg Package API
+  description: The package API from Codeberg — 5 operation(s) for package.
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  tags:
+  - package
+  properties:
+  - type: OpenAPI
+    url: openapi/codeberg-package-api-openapi.yml
+  - type: Documentation
+    url: https://docs.codeberg.org/advanced/api-usage/
+  - type: APIReference
+    url: https://codeberg.org/api/swagger
+  - type: PostmanCollection
+    url: collections/codeberg.postman_collection.json
+  - type: OpenCollection
+    url: collections/codeberg.opencollection.json
+- aid: codeberg:codeberg-repository-api
+  name: Codeberg Repository API
+  description: The repository API from Codeberg — 126 operation(s) for repository.
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  tags:
+  - repository
+  properties:
+  - type: OpenAPI
+    url: openapi/codeberg-repository-api-openapi.yml
+  - type: Documentation
+    url: https://docs.codeberg.org/advanced/api-usage/
+  - type: APIReference
+    url: https://codeberg.org/api/swagger
+  - type: PostmanCollection
+    url: collections/codeberg.postman_collection.json
+  - type: OpenCollection
+    url: collections/codeberg.opencollection.json
+- aid: codeberg:codeberg-settings-api
+  name: Codeberg Settings API
+  description: The settings API from Codeberg — 4 operation(s) for settings.
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  tags:
+  - settings
+  properties:
+  - type: OpenAPI
+    url: openapi/codeberg-settings-api-openapi.yml
+  - type: Documentation
+    url: https://docs.codeberg.org/advanced/api-usage/
+  - type: APIReference
+    url: https://codeberg.org/api/swagger
+  - type: PostmanCollection
+    url: collections/codeberg.postman_collection.json
+  - type: OpenCollection
+    url: collections/codeberg.opencollection.json
+- aid: codeberg:codeberg-user-api
+  name: Codeberg User API
+  description: The user API from Codeberg — 54 operation(s) for user.
+  humanURL: https://codeberg.org/api/swagger
+  baseURL: https://codeberg.org/api/v1
+  tags:
+  - user
+  properties:
+  - type: OpenAPI
+    url: openapi/codeberg-user-api-openapi.yml
   - type: Documentation
     url: https://docs.codeberg.org/advanced/api-usage/
   - type: APIReference

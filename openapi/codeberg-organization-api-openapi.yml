@@ -1,0 +1,3974 @@
+openapi: 3.2.0
+info:
+  description: This documentation describes the Forgejo API.
+  title: Forgejo Organization API
+  license:
+    name: This file is distributed under the MIT license for the purpose of interoperability
+    url: http://opensource.org/licenses/MIT
+  version: 16.0.0-dev-785-465b60ef+gitea-1.22.0
+servers:
+- url: /api/v1
+security:
+- BasicAuth: []
+- AuthorizationHeaderToken: []
+- SudoParam: []
+- SudoHeader: []
+- TOTPHeader: []
+tags:
+- name: Organization
+paths:
+  /org/{org}/repos:
+    post:
+      tags:
+      - Organization
+      summary: Create a repository in an organization
+      operationId: createOrgRepoDeprecated
+      deprecated: true
+      parameters:
+      - description: name of organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Repository'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRepoOption'
+  /orgs:
+    get:
+      tags:
+      - Organization
+      summary: List all organizations
+      operationId: orgGetAll
+      parameters:
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/OrganizationList'
+    post:
+      tags:
+      - Organization
+      summary: Create an organization
+      operationId: orgCreate
+      responses:
+        '201':
+          $ref: '#/components/responses/Organization'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrgOption'
+        required: true
+  /orgs/{org}:
+    get:
+      tags:
+      - Organization
+      summary: Get an organization
+      operationId: orgGet
+      parameters:
+      - description: name of the organization to get
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/Organization'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Organization
+      summary: Delete an organization
+      operationId: orgDelete
+      parameters:
+      - description: organization that is to be deleted
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+    patch:
+      tags:
+      - Organization
+      summary: Edit an organization
+      operationId: orgEdit
+      parameters:
+      - description: name of the organization to edit
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/Organization'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditOrgOption'
+        required: true
+  /orgs/{org}/actions/runners:
+    get:
+      tags:
+      - Organization
+      summary: Get the organization's runners
+      operationId: getOrgRunners
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: whether to include all visible runners (true) or only those that are directly owned by the organization (false)
+        name: visible
+        in: query
+        schema:
+          type: boolean
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/ActionRunnerList'
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+    post:
+      tags:
+      - Organization
+      summary: Register a new organization-level runner
+      operationId: registerOrgRunner
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/RegisterRunnerResponse'
+        '400':
+          $ref: '#/components/responses/error'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRunnerOptions'
+  /orgs/{org}/actions/runners/jobs:
+    get:
+      tags:
+      - Organization
+      summary: Search for organization's action jobs according filter conditions
+      operationId: orgSearchRunJobs
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: a comma separated list of run job labels to search for
+        name: labels
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/RunJobList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /orgs/{org}/actions/runners/registration-token:
+    get:
+      description: This operation has been deprecated in Forgejo 15. Use the web UI or `/orgs/{org}/actions/runners` instead.
+      tags:
+      - Organization
+      summary: Get the organization's runner registration token
+      operationId: orgGetRunnerRegistrationToken
+      deprecated: true
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/RegistrationToken'
+  /orgs/{org}/actions/runners/{runner_id}:
+    get:
+      tags:
+      - Organization
+      summary: Get a particular runner that belongs to the organization
+      operationId: getOrgRunner
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: ID of the runner
+        name: runner_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ActionRunner'
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Organization
+      summary: Delete a particular runner that belongs to the organization
+      operationId: deleteOrgRunner
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: ID of the runner
+        name: runner_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: runner has been deleted
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/actions/secrets:
+    get:
+      tags:
+      - Organization
+      summary: List actions secrets of an organization
+      operationId: orgListActionsSecrets
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/SecretList'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/actions/secrets/{secretname}:
+    put:
+      tags:
+      - Organization
+      summary: Create or Update a secret value in an organization
+      operationId: updateOrgSecret
+      parameters:
+      - description: name of organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the secret
+        name: secretname
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: response when creating a secret
+        '204':
+          description: response when updating a secret
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdateSecretOption'
+    delete:
+      tags:
+      - Organization
+      summary: Delete a secret in an organization
+      operationId: deleteOrgSecret
+      parameters:
+      - description: name of organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the secret
+        name: secretname
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: delete one secret of the organization
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/actions/variables:
+    get:
+      tags:
+      - Organization
+      summary: List variables of an organization
+      operationId: getOrgVariablesList
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/VariableList'
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/actions/variables/{variablename}:
+    get:
+      tags:
+      - Organization
+      summary: Get organization's variable by name
+      operationId: getOrgVariable
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the variable
+        name: variablename
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ActionVariable'
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+    put:
+      tags:
+      - Organization
+      summary: Update variable in organization
+      operationId: updateOrgVariable
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the variable
+        name: variablename
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: response when updating an org-level variable
+        '204':
+          description: response when updating an org-level variable
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVariableOption'
+    post:
+      tags:
+      - Organization
+      summary: Create a new variable in organization
+      operationId: createOrgVariable
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the variable
+        name: variablename
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: response when creating an org-level variable
+        '204':
+          description: response when creating an org-level variable
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVariableOption'
+    delete:
+      tags:
+      - Organization
+      summary: Delete organization's variable by name
+      operationId: deleteOrgVariable
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the variable
+        name: variablename
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: response when deleting a variable
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/activities/feeds:
+    get:
+      tags:
+      - Organization
+      summary: List an organization's activity feeds
+      operationId: orgListActivityFeeds
+      parameters:
+      - description: name of the org
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: the date of the activities to be found
+        name: date
+        in: query
+        schema:
+          type: string
+          format: date
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/ActivityFeedsList'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/avatar:
+    post:
+      tags:
+      - Organization
+      summary: Update an organization's avatar
+      operationId: orgUpdateAvatar
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserAvatarOption'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/UpdateUserAvatarOption'
+    delete:
+      tags:
+      - Organization
+      summary: Delete an organization's avatar. It will be replaced by a default one
+      operationId: orgDeleteAvatar
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/block/{username}:
+    put:
+      tags:
+      - Organization
+      summary: Blocks a user from the organization
+      operationId: orgBlockUser
+      parameters:
+      - description: name of the org
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+  /orgs/{org}/hooks:
+    get:
+      tags:
+      - Organization
+      summary: List an organization's webhooks
+      operationId: orgListHooks
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/HookListWithoutPagination'
+        '404':
+          $ref: '#/components/responses/notFound'
+    post:
+      tags:
+      - Organization
+      summary: Create a hook
+      operationId: orgCreateHook
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Hook'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHookOption'
+        required: true
+  /orgs/{org}/hooks/{id}:
+    get:
+      tags:
+      - Organization
+      summary: Get a hook
+      operationId: orgGetHook
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: id of the hook to get
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/Hook'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Organization
+      summary: Delete a hook
+      operationId: orgDeleteHook
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: id of the hook to delete
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+    patch:
+      tags:
+      - Organization
+      summary: Update a hook
+      operationId: orgEditHook
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: id of the hook to update
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/Hook'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditHookOption'
+  /orgs/{org}/labels:
+    get:
+      tags:
+      - Organization
+      summary: List an organization's labels
+      operationId: orgListLabels
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 'Specifies the sorting method: mostissues, leastissues, or reversealphabetically.'
+        name: sort
+        in: query
+        schema:
+          type: string
+          enum:
+          - mostissues
+          - leastissues
+          - reversealphabetically
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/LabelList'
+        '404':
+          $ref: '#/components/responses/notFound'
+    post:
+      tags:
+      - Organization
+      summary: Create a label for an organization
+      operationId: orgCreateLabel
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Label'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLabelOption'
+  /orgs/{org}/labels/{id}:
+    get:
+      tags:
+      - Organization
+      summary: Get a single label
+      operationId: orgGetLabel
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: id of the label to get
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/Label'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Organization
+      summary: Delete a label
+      operationId: orgDeleteLabel
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: id of the label to delete
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+    patch:
+      tags:
+      - Organization
+      summary: Update a label
+      operationId: orgEditLabel
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: id of the label to edit
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/Label'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditLabelOption'
+  /orgs/{org}/list_blocked:
+    get:
+      tags:
+      - Organization
+      summary: List the organization's blocked users
+      operationId: orgListBlockedUsers
+      parameters:
+      - description: name of the org
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/BlockedUserList'
+  /orgs/{org}/members:
+    get:
+      tags:
+      - Organization
+      summary: List an organization's members
+      operationId: orgListMembers
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/UserList'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/members/{username}:
+    get:
+      tags:
+      - Organization
+      summary: Check if a user is a member of an organization
+      operationId: orgIsMember
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: user is a member
+        '303':
+          description: redirection to /orgs/{org}/public_members/{username}
+        '404':
+          description: user is not a member
+    delete:
+      tags:
+      - Organization
+      summary: Remove a member from an organization
+      operationId: orgDeleteMember
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: member removed
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/public_members:
+    get:
+      tags:
+      - Organization
+      summary: List an organization's public members
+      operationId: orgListPublicMembers
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/UserList'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/public_members/{username}:
+    get:
+      tags:
+      - Organization
+      summary: Check if a user is a public member of an organization
+      operationId: orgIsPublicMember
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: user is a public member
+        '404':
+          description: user is not a public member
+    put:
+      tags:
+      - Organization
+      summary: Publicize a user's membership
+      operationId: orgPublicizeMember
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: membership publicized
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Organization
+      summary: Conceal a user's membership
+      operationId: orgConcealMember
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/quota:
+    get:
+      tags:
+      - Organization
+      summary: Get quota information for an organization
+      operationId: orgGetQuota
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaInfo'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/quota/artifacts:
+    get:
+      tags:
+      - Organization
+      summary: List the artifacts affecting the organization's quota
+      operationId: orgListQuotaArtifacts
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaUsedArtifactList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/quota/attachments:
+    get:
+      tags:
+      - Organization
+      summary: List the attachments affecting the organization's quota
+      operationId: orgListQuotaAttachments
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaUsedAttachmentList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/quota/check:
+    get:
+      tags:
+      - Organization
+      summary: Check if the organization is over quota for a given subject
+      operationId: orgCheckQuota
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: subject of the quota
+        name: subject
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returns true if the action is accepted.
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+  /orgs/{org}/quota/packages:
+    get:
+      tags:
+      - Organization
+      summary: List the packages affecting the organization's quota
+      operationId: orgListQuotaPackages
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaUsedPackageList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/rename:
+    post:
+      tags:
+      - Organization
+      summary: Rename an organization
+      operationId: renameOrg
+      parameters:
+      - description: existing org name
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenameOrgOption'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/RenameOrgOption'
+        required: true
+  /orgs/{org}/repos:
+    get:
+      tags:
+      - Organization
+      summary: List an organization's repos
+      operationId: orgListRepos
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/RepositoryList'
+        '404':
+          $ref: '#/components/responses/notFound'
+    post:
+      tags:
+      - Organization
+      summary: Create a repository in an organization
+      operationId: createOrgRepo
+      parameters:
+      - description: name of organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Repository'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRepoOption'
+  /orgs/{org}/teams:
+    get:
+      tags:
+      - Organization
+      summary: List an organization's teams
+      operationId: orgListTeams
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/TeamList'
+        '404':
+          $ref: '#/components/responses/notFound'
+    post:
+      tags:
+      - Organization
+      summary: Create a team
+      operationId: orgCreateTeam
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Team'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTeamOption'
+  /orgs/{org}/teams/search:
+    get:
+      tags:
+      - Organization
+      summary: Search for teams within an organization
+      operationId: teamSearch
+      parameters:
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: keywords to search
+        name: q
+        in: query
+        schema:
+          type: string
+      - description: include search within team description (defaults to true)
+        name: include_desc
+        in: query
+        schema:
+          type: boolean
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: SearchResults of a successful search
+          content:
+            application/json:
+              schema:
+                type: object
+                title: TeamSearchResults
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Team'
+                  ok:
+                    type: boolean
+        '404':
+          $ref: '#/components/responses/notFound'
+  /orgs/{org}/unblock/{username}:
+    put:
+      tags:
+      - Organization
+      summary: Unblock a user from the organization
+      operationId: orgUnblockUser
+      parameters:
+      - description: name of the org
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+  /teams/{id}:
+    get:
+      tags:
+      - Organization
+      summary: Get a team
+      operationId: orgGetTeam
+      parameters:
+      - description: id of the team to get
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/Team'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Organization
+      summary: Delete a team
+      operationId: orgDeleteTeam
+      parameters:
+      - description: id of the team to delete
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: team deleted
+        '404':
+          $ref: '#/components/responses/notFound'
+    patch:
+      tags:
+      - Organization
+      summary: Edit a team
+      operationId: orgEditTeam
+      parameters:
+      - description: id of the team to edit
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/Team'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditTeamOption'
+  /teams/{id}/activities/feeds:
+    get:
+      tags:
+      - Organization
+      summary: List a team's activity feeds
+      operationId: orgListTeamActivityFeeds
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: the date of the activities to be found
+        name: date
+        in: query
+        schema:
+          type: string
+          format: date
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/ActivityFeedsList'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /teams/{id}/members:
+    get:
+      tags:
+      - Organization
+      summary: List a team's members
+      operationId: orgListTeamMembers
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/UserList'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /teams/{id}/members/{username}:
+    get:
+      tags:
+      - Organization
+      summary: List a particular member of team
+      operationId: orgListTeamMember
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: username of the member to list
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '404':
+          $ref: '#/components/responses/notFound'
+    put:
+      tags:
+      - Organization
+      summary: Add a team member
+      operationId: orgAddTeamMember
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: username of the user to add
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '409':
+          $ref: '#/components/responses/forbidden'
+    delete:
+      tags:
+      - Organization
+      summary: Remove a team member
+      operationId: orgRemoveTeamMember
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: username of the user to remove
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /teams/{id}/repos:
+    get:
+      tags:
+      - Organization
+      summary: List a team's repos
+      operationId: orgListTeamRepos
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/RepositoryList'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /teams/{id}/repos/{org}/{repo}:
+    get:
+      tags:
+      - Organization
+      summary: List a particular repo of team
+      operationId: orgListTeamRepo
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: organization that owns the repo to list
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the repo to list
+        name: repo
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/Repository'
+        '404':
+          $ref: '#/components/responses/notFound'
+    put:
+      tags:
+      - Organization
+      summary: Add a repository to a team
+      operationId: orgAddTeamRepository
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: organization that owns the repo to add
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the repo to add
+        name: repo
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      description: This does not delete the repository, it only removes the repository from the team.
+      tags:
+      - Organization
+      summary: Remove a repository from a team
+      operationId: orgRemoveTeamRepository
+      parameters:
+      - description: id of the team
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: organization that owns the repo to remove
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the repo to remove
+        name: repo
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /user/orgs:
+    get:
+      tags:
+      - Organization
+      summary: List the current user's organizations
+      operationId: orgListCurrentUserOrgs
+      parameters:
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/OrganizationListWithoutPagination'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /users/{username}/orgs:
+    get:
+      tags:
+      - Organization
+      summary: List a user's organizations
+      operationId: orgListUserOrgs
+      parameters:
+      - description: username of user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/OrganizationListWithoutPagination'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /users/{username}/orgs/{org}/permissions:
+    get:
+      tags:
+      - Organization
+      summary: Get user permissions in organization
+      operationId: orgGetUserPermissions
+      parameters:
+      - description: username of user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the organization
+        name: org
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/OrganizationPermissions'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+components:
+  schemas:
+    CreateVariableOption:
+      type: object
+      title: CreateVariableOption defines the properties of the variable to create.
+      required:
+      - value
+      properties:
+        value:
+          description: 'Value of the variable to create. Special characters will be retained. Line endings will be normalized to LF to
+
+            match the behaviour of browsers. Encode the data with Base64 if line endings should be retained.'
+          type: string
+          x-go-name: Value
+      x-go-package: forgejo.org/modules/structs
+    QuotaGroup:
+      description: QuotaGroup represents a quota group
+      type: object
+      properties:
+        name:
+          description: Name of the group
+          type: string
+          x-go-name: Name
+        rules:
+          description: Rules associated with the group
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaRuleInfo'
+          x-go-name: Rules
+      x-go-package: forgejo.org/modules/structs
+    CreateHookOption:
+      description: CreateHookOption options when create a hook
+      type: object
+      required:
+      - type
+      - config
+      properties:
+        active:
+          type: boolean
+          default: false
+          x-go-name: Active
+        authorization_header:
+          type: string
+          x-go-name: AuthorizationHeader
+        branch_filter:
+          type: string
+          x-go-name: BranchFilter
+        config:
+          $ref: '#/components/schemas/CreateHookOptionConfig'
+        events:
+          type: array
+          items:
+            type: string
+          x-go-name: Events
+        type:
+          type: string
+          enum:
+          - forgejo
+          - dingtalk
+          - discord
+          - gitea
+          - gogs
+          - msteams
+          - slack
+          - telegram
+          - feishu
+          - wechatwork
+          - packagist
+          x-go-name: Type
+      x-go-package: forgejo.org/modules/structs
+    RepoTransfer:
+      description: RepoTransfer represents a pending repo transfer
+      type: object
+      properties:
+        doer:
+          $ref: '#/components/schemas/User'
+        recipient:
+          $ref: '#/components/schemas/User'
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+          x-go-name: Teams
+      x-go-package: forgejo.org/modules/structs
+    Label:
+      description: Label a label to an issue or a pr
+      type: object
+      properties:
+        color:
+          type: string
+          x-go-name: Color
+          example: 00aabb
+        description:
+          type: string
+          x-go-name: Description
+        exclusive:
+          type: boolean
+          x-go-name: Exclusive
+          example: false
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        is_archived:
+          type: boolean
+          x-go-name: IsArchived
+          example: false
+        name:
+          type: string
+          x-go-name: Name
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/modules/structs
+    Secret:
+      description: Secret represents a secret
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        name:
+          description: the secret's name
+          type: string
+          x-go-name: Name
+      x-go-package: forgejo.org/modules/structs
+    RenameOrgOption:
+      description: RenameOrgOption options when renaming an organization
+      type: object
+      required:
+      - new_name
+      properties:
+        new_name:
+          description: New username for this org. This name cannot be in use yet by any other user.
+          type: string
+          uniqueItems: true
+          x-go-name: NewName
+      x-go-package: forgejo.org/modules/structs
+    ActionVariable:
+      description: ActionVariable return value of the query API
+      type: object
+      properties:
+        data:
+          description: the value of the variable
+          type: string
+          x-go-name: Data
+        name:
+          description: the name of the variable
+          type: string
+          x-go-name: Name
+        owner_id:
+          description: the owner to which the variable belongs
+          type: integer
+          format: int64
+          x-go-name: OwnerID
+        repo_id:
+          description: the repository to which the variable belongs
+          type: integer
+          format: int64
+          x-go-name: RepoID
+      x-go-package: forgejo.org/modules/structs
+    CreateLabelOption:
+      description: CreateLabelOption options for creating a label
+      type: object
+      required:
+      - name
+      - color
+      properties:
+        color:
+          type: string
+          x-go-name: Color
+          example: '#00aabb'
+        description:
+          type: string
+          x-go-name: Description
+        exclusive:
+          type: boolean
+          x-go-name: Exclusive
+          example: false
+        is_archived:
+          type: boolean
+          x-go-name: IsArchived
+          example: false
+        name:
+          type: string
+          x-go-name: Name
+      x-go-package: forgejo.org/modules/structs
+    EditTeamOption:
+      description: EditTeamOption options for editing a team
+      type: object
+      required:
+      - name
+      properties:
+        can_create_org_repo:
+          type: boolean
+          x-go-name: CanCreateOrgRepo
+        description:
+          type: string
+          x-go-name: Description
+        includes_all_repositories:
+          type: boolean
+          x-go-name: IncludesAllRepositories
+        name:
+          type: string
+          x-go-name: Name
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - admin
+          x-go-name: Permission
+        units:
+          type: array
+          items:
+            type: string
+          x-go-name: Units
+          example:
+          - repo.code
+          - repo.issues
+          - repo.ext_issues
+          - repo.wiki
+          - repo.pulls
+          - repo.releases
+          - repo.projects
+          - repo.ext_wiki
+        units_map:
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: UnitsMap
+          example:
+            repo.actions: none
+            repo.code: read
+            repo.ext_issues: none
+            repo.ext_wiki: none
+            repo.issues: write
+            repo.packages: none
+            repo.projects: none
+            repo.pulls: owner
+            repo.releases: none
+            repo.wiki: admin
+      x-go-package: forgejo.org/modules/structs
+    User:
+      description: User represents a user
+      type: object
+      properties:
+        active:
+          description: Is user active
+          type: boolean
+          x-go-name: IsActive
+        avatar_url:
+          description: URL to the user's avatar
+          type: string
+          x-go-name: AvatarURL
+        created:
+          type: string
+          format: date-time
+          x-go-name: Created
+        description:
+          description: the user's description
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          format: email
+          x-go-name: Email
+        followers_count:
+          description: user counts
+          type: integer
+          format: int64
+          x-go-name: Followers
+        following_count:
+          type: integer
+          format: int64
+          x-go-name: Following
+        full_name:
+          description: the user's full name
+          type: string
+          x-go-name: FullName
+        html_url:
+          description: URL to the user's profile page
+          type: string
+          x-go-name: HTMLURL
+        id:
+          description: the user's id
+          type: integer
+          format: int64
+          x-go-name: ID
+        is_admin:
+          description: Is the user an administrator
+          type: boolean
+          x-go-name: IsAdmin
+        language:
+          description: User locale
+          type: string
+          x-go-name: Language
+        last_login:
+          type: string
+          format: date-time
+          x-go-name: LastLogin
+        location:
+          description: the user's location
+          type: string
+          x-go-name: Location
+        login:
+          description: the user's username
+          type: string
+          x-go-name: UserName
+        login_name:
+          description: the user's authentication sign-in name.
+          type: string
+          default: empty
+          x-go-name: LoginName
+        prohibit_login:
+          description: Is user login prohibited
+          type: boolean
+          x-go-name: ProhibitLogin
+        pronouns:
+          description: the user's pronouns
+          type: string
+          x-go-name: Pronouns
+        restricted:
+          description: Is user restricted
+          type: boolean
+          x-go-name: Restricted
+        source_id:
+          description: The ID of the user's Authentication Source
+          type: integer
+          format: int64
+          x-go-name: SourceID
+        starred_repos_count:
+          type: integer
+          format: int64
+          x-go-name: StarredRepos
+        visibility:
+          description: 'User visibility level option: public, limited, private'
+          type: string
+          x-go-name: Visibility
+        website:
+          description: the user's website
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedAttachment:
+      description: QuotaUsedAttachment represents an attachment counting towards a user's quota
+      type: object
+      properties:
+        api_url:
+          description: API URL for the attachment
+          type: string
+          x-go-name: APIURL
+        contained_in:
+          description: 'Context for the attachment: URLs to the containing object'
+          type: object
+          properties:
+            api_url:
+              description: API URL for the object that contains this attachment
+              type: string
+              x-go-name: APIURL
+            html_url:
+              description: HTML URL for the object that contains this attachment
+              type: string
+              x-go-name: HTMLURL
+          x-go-name: ContainedIn
+        name:
+          description: Filename of the attachment
+          type: string
+          x-go-name: Name
+        size:
+          description: Size of the attachment (in bytes)
+          type: integer
+          format: int64
+          x-go-name: Size
+      x-go-package: forgejo.org/modules/structs
+    QuotaInfo:
+      description: QuotaInfo represents information about a user's quota
+      type: object
+      properties:
+        groups:
+          $ref: '#/components/schemas/QuotaGroupList'
+        used:
+          $ref: '#/components/schemas/QuotaUsed'
+      x-go-package: forgejo.org/modules/structs
+    UpdateUserAvatarOption:
+      description: UpdateUserAvatarUserOption options when updating the user avatar
+      type: object
+      properties:
+        image:
+          description: image must be base64 encoded
+          type: string
+          x-go-name: Image
+      x-go-package: forgejo.org/modules/structs
+    OrganizationPermissions:
+      description: OrganizationPermissions list different users permissions on an organization
+      type: object
+      properties:
+        can_create_repository:
+          type: boolean
+          x-go-name: CanCreateRepository
+        can_read:
+          type: boolean
+          x-go-name: CanRead
+        can_write:
+          type: boolean
+          x-go-name: CanWrite
+        is_admin:
+          type: boolean
+          x-go-name: IsAdmin
+        is_owner:
+          type: boolean
+          x-go-name: IsOwner
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedPackage:
+      description: QuotaUsedPackage represents a package counting towards a user's quota
+      type: object
+      properties:
+        html_url:
+          description: HTML URL to the package version
+          type: string
+          x-go-name: HTMLURL
+        name:
+          description: Name of the package
+          type: string
+          x-go-name: Name
+        size:
+          description: Size of the package version
+          type: integer
+          format: int64
+          x-go-name: Size
+        type:
+          description: Type of the package
+          type: string
+          x-go-name: Type
+        version:
+          description: Version of the package
+          type: string
+          x-go-name: Version
+      x-go-package: forgejo.org/modules/structs
+    Team:
+      description: Team represents a team in an organization
+      type: object
+      properties:
+        can_create_org_repo:
+          type: boolean
+          x-go-name: CanCreateOrgRepo
+        description:
+          type: string
+          x-go-name: Description
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        includes_all_repositories:
+          type: boolean
+          x-go-name: IncludesAllRepositories
+        name:
+          type: string
+          x-go-name: Name
+        organization:
+          $ref: '#/components/schemas/Organization'
+        permission:
+          type: string
+          enum:
+          - none
+          - read
+          - write
+          - admin
+          - owner
+          x-go-name: Permission
+        units:
+          type: array
+          items:
+            type: string
+          x-go-name: Units
+          example:
+          - repo.code
+          - repo.issues
+          - repo.ext_issues
+          - repo.wiki
+          - repo.pulls
+          - repo.releases
+          - repo.projects
+          - repo.ext_wiki
+        units_map:
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: UnitsMap
+          example:
+            repo.actions: none
+            repo.code: read
+            repo.ext_issues: none
+            repo.ext_wiki: none
+            repo.issues: write
+            repo.packages: none
+            repo.projects: none
+            repo.pulls: owner
+            repo.releases: none
+            repo.wiki: admin
+      x-go-package: forgejo.org/modules/structs
+    RegisterRunnerResponse:
+      type: object
+      title: RegisterRunnerResponse contains the details of the just registered runner.
+      properties:
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        token:
+          type: string
+          x-go-name: Token
+        uuid:
+          type: string
+          x-go-name: UUID
+      x-go-package: forgejo.org/modules/structs
+    EditLabelOption:
+      description: EditLabelOption options for editing a label
+      type: object
+      properties:
+        color:
+          type: string
+          x-go-name: Color
+          example: '#00aabb'
+        description:
+          type: string
+          x-go-name: Description
+        exclusive:
+          type: boolean
+          x-go-name: Exclusive
+          example: false
+        is_archived:
+          type: boolean
+          x-go-name: IsArchived
+          example: false
+        name:
+          type: string
+          x-go-name: Name
+      x-go-package: forgejo.org/modules/structs
+    CreateRepoOption:
+      description: CreateRepoOption options when creating repository
+      type: object
+      required:
+      - name
+      properties:
+        auto_init:
+          description: Whether the repository should be auto-initialized?
+          type: boolean
+          x-go-name: AutoInit
+        default_branch:
+          description: DefaultBranch of the repository (used when initializes and in template)
+          type: string
+          x-go-name: DefaultBranch
+        description:
+          description: Description of the repository to create
+          type: string
+          x-go-name: Description
+        gitignores:
+          description: Gitignores to use, separated by commas
+          type: string
+          x-go-name: Gitignores
+        issue_labels:
+          description: Label-Set to use
+          type: string
+          x-go-name: IssueLabels
+        license:
+          description: License to use
+          type: string
+          x-go-name: License
+        name:
+          description: Name of the repository to create
+          type: string
+          uniqueItems: true
+          x-go-name: Name
+        object_format_name:
+          description: ObjectFormatName of the underlying git repository
+          type: string
+          enum:
+          - sha1
+          - sha256
+          x-go-name: ObjectFormatName
+        private:
+          description: Whether the repository is private
+          type: boolean
+          x-go-name: Private
+        readme:
+          description: Readme of the repository to create
+          type: string
+          x-go-name: Readme
+        template:
+          description: Whether the repository is template
+          type: boolean
+          x-go-name: Template
+        trust_model:
+          description: TrustModel of the repository
+          type: string
+          enum:
+          - default
+          - collaborator
+          - committer
+          - collaboratorcommitter
+          x-go-name: TrustModel
+      x-go-package: forgejo.org/modules/structs
+    BlockedUser:
+      type: object
+      title: BlockedUser represents a blocked user.
+      properties:
+        block_id:
+          type: integer
+          format: int64
+          x-go-name: BlockID
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+      x-go-package: forgejo.org/modules/structs
+    Attachment:
+      description: Attachment a generic attachment
+      type: object
+      properties:
+        browser_download_url:
+          type: string
+          x-go-name: DownloadURL
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        download_count:
+          type: integer
+          format: int64
+          x-go-name: DownloadCount
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        name:
+          type: string
+          x-go-name: Name
+        size:
+          type: integer
+          format: int64
+          x-go-name: Size
+        type:
+          type: string
+          enum:
+          - attachment
+          - external
+          x-go-name: Type
+        uuid:
+          type: string
+          x-go-name: UUID
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSizeAssetsPackages:
+      description: QuotaUsedSizeAssetsPackages represents the size-based package quota usage of a user
+      type: object
+      properties:
+        all:
+          description: Storage suze used for the user's packages
+          type: integer
+          format: int64
+          x-go-name: All
+      x-go-package: forgejo.org/modules/structs
+    APIValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    CreateOrUpdateSecretOption:
+      type: object
+      title: CreateOrUpdateSecretOption defines the properties of the secret to create or update.
+      required:
+      - data
+      properties:
+        data:
+          description: 'Data of the secret. Special characters will be retained. Line endings will be normalized to LF to match the
+
+            behaviour of browsers. Encode the data with Base64 if line endings should be retained.'
+          type: string
+          x-go-name: Data
+      x-go-package: forgejo.org/modules/structs
+    RegisterRunnerOptions:
+      type: object
+      title: RegisterRunnerOptions declares the accepted options for registering runners.
+      required:
+      - name
+      properties:
+        description:
+          description: Description of the runner to register.
+          type: string
+          x-go-name: Description
+        ephemeral:
+          description: Register as ephemeral runner https://forgejo.org/docs/latest/admin/actions/security/#ephemeral-runner
+          type: boolean
+          x-go-name: Ephemeral
+        name:
+          description: Name of the runner to register. The name of the runner does not have to be unique.
+          type: string
+          x-go-name: Name
+      x-go-package: forgejo.org/modules/structs
+    APINotFound:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          x-go-name: Errors
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    ExternalWiki:
+      description: ExternalWiki represents setting for external wiki
+      type: object
+      properties:
+        external_wiki_url:
+          description: URL of external wiki.
+          type: string
+          x-go-name: ExternalWikiURL
+      x-go-package: forgejo.org/modules/structs
+    Hook:
+      description: Hook a hook is a web hook when one repository changed
+      type: object
+      properties:
+        active:
+          type: boolean
+          x-go-name: Active
+        authorization_header:
+          type: string
+          x-go-name: AuthorizationHeader
+        branch_filter:
+          type: string
+          x-go-name: BranchFilter
+        config:
+          description: 'Deprecated: use Metadata instead'
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: Config
+        content_type:
+          type: string
+          x-go-name: ContentType
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        events:
+          type: array
+          items:
+            type: string
+          x-go-name: Events
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        metadata:
+          x-go-name: Metadata
+        type:
+          type: string
+          x-go-name: Type
+        updated_at:
+          type: string
+          format: date-time
+          x-go-name: Updated
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/modules/structs
+    Organization:
+      description: Organization represents an organization
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          x-go-name: AvatarURL
+        created:
+          type: string
+          format: date-time
+          x-go-name: Created
+        description:
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          x-go-name: Email
+        full_name:
+          type: string
+          x-go-name: FullName
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        location:
+          type: string
+          x-go-name: Location
+        name:
+          type: string
+          x-go-name: Name
+        repo_admin_change_team_access:
+          type: boolean
+          x-go-name: RepoAdminChangeTeamAccess
+        username:
+          description: deprecated
+          type: string
+          x-go-name: UserName
+        visibility:
+          type: string
+          x-go-name: Visibility
+        website:
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedArtifact:
+      description: QuotaUsedArtifact represents an artifact counting towards a user's quota
+      type: object
+      properties:
+        html_url:
+          description: HTML URL to the action run containing the artifact
+          type: string
+          x-go-name: HTMLURL
+        name:
+          description: Name of the artifact
+          type: string
+          x-go-name: Name
+        size:
+          description: Size of the artifact (compressed)
+          type: integer
+          format: int64
+          x-go-name: Size
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedPackageList:
+      description: QuotaUsedPackageList represents a list of packages counting towards a user's quota
+      type: array
+      items:
+        $ref: '#/components/schemas/QuotaUsedPackage'
+      x-go-package: forgejo.org/modules/structs
+    Activity:
+      type: object
+      properties:
+        act_user:
+          $ref: '#/components/schemas/User'
+        act_user_id:
+          type: integer
+          format: int64
+          x-go-name: ActUserID
+        comment:
+          $ref: '#/components/schemas/Comment'
+        comment_id:
+          type: integer
+          format: int64
+          x-go-name: CommentID
+        content:
+          type: string
+          x-go-name: Content
+        created:
+          type: string
+          format: date-time
+          x-go-name: Created
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        is_private:
+          type: boolean
+          x-go-name: IsPrivate
+        op_type:
+          description: the type of action
+          type: string
+          enum:
+          - create_repo
+          - rename_repo
+          - star_repo
+          - watch_repo
+          - commit_repo
+          - create_issue
+          - create_pull_request
+          - transfer_repo
+          - push_tag
+          - comment_issue
+          - merge_pull_request
+          - close_issue
+          - reopen_issue
+          - close_pull_request
+          - reopen_pull_request
+          - delete_tag
+          - delete_branch
+          - mirror_sync_push
+          - mirror_sync_create
+          - mirror_sync_delete
+          - approve_pull_request
+          - reject_pull_request
+          - comment_pull
+          - publish_release
+          - pull_review_dismissed
+          - pull_request_ready_for_review
+          - auto_merge_pull_request
+          x-go-name: OpType
+        ref_name:
+          type: string
+          x-go-name: RefName
+        repo:
+          $ref: '#/components/schemas/Repository'
+        repo_id:
+          type: integer
+          format: int64
+          x-go-name: RepoID
+        user_id:
+          type: integer
+          format: int64
+          x-go-name: UserID
+      x-go-package: forgejo.org/modules/structs
+    ActionRunner:
+      description: ActionRunner represents a runner
+      type: object
+      properties:
+        description:
+          description: Description provides optional details about this runner.
+          type: string
+          x-go-name: Description
+        ephemeral:
+          description: Indicates if runner is ephemeral runner
+          type: boolean
+          x-go-name: Ephemeral
+        id:
+          description: ID uniquely identifies this runner.
+          type: integer
+          format: int64
+          x-go-name: ID
+        labels:
+          description: Labels is a list of labels attached to this runner.
+          type: array
+          items:
+            type: string
+          x-go-name: Labels
+        name:
+          description: Name of the runner; not unique.
+          type: string
+          x-go-name: Name
+        owner_id:
+          description: 'OwnerID is the identifier of the user or organization this runner belongs to. O if the runner is owned by a
+
+            repository.'
+          type: integer
+          format: int64
+          x-go-name: OwnerID
+        repo_id:
+          description: 'RepoID is the identifier of the repository this runner belongs to. 0 if the runner belongs to a user or
+
+            organization.'
+          type: integer
+          format: int64
+          x-go-name: RepoID
+        status:
+          description: Status indicates whether this runner is offline, or active, for example.
+          type: string
+          enum:
+          - offline
+          - idle
+          - active
+          x-go-name: Status
+        uuid:
+          description: UUID uniquely identifies this runner.
+          type: string
+          x-go-name: UUID
+        version:
+          description: Version is the self-reported version string of Forgejo Runner.
+          type: string
+          x-go-name: Version
+      x-go-package: forgejo.org/modules/structs
+    InternalTracker:
+      description: InternalTracker represents settings for internal tracker
+      type: object
+      properties:
+        allow_only_contributors_to_track_time:
+          description: Let only contributors track time (Built-in issue tracker)
+          type: boolean
+          x-go-name: AllowOnlyContributorsToTrackTime
+        enable_issue_dependencies:
+          description: Enable dependencies for issues and pull requests (Built-in issue tracker)
+          type: boolean
+          x-go-name: EnableIssueDependencies
+        enable_time_tracker:
+          description: Enable time tracking (Built-in issue tracker)
+          type: boolean
+          x-go-name: EnableTimeTracker
+      x-go-package: forgejo.org/modules/structs
+    Permission:
+      description: Permission represents a set of permissions
+      type: object
+      properties:
+        admin:
+          type: boolean
+          x-go-name: Admin
+        pull:
+          type: boolean
+          x-go-name: Pull
+        push:
+          type: boolean
+          x-go-name: Push
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSizeAssetsAttachments:
+      description: QuotaUsedSizeAssetsAttachments represents the size-based attachment quota usage of a user
+      type: object
+      properties:
+        issues:
+          description: Storage size used for the user's issue & comment attachments
+          type: integer
+          format: int64
+          x-go-name: Issues
+        releases:
+          description: Storage size used for the user's release attachments
+          type: integer
+          format: int64
+          x-go-name: Releases
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSizeAssets:
+      description: QuotaUsedSizeAssets represents the size-based asset usage of a user
+      type: object
+      properties:
+        artifacts:
+          description: Storage size used for the user's artifacts
+          type: integer
+          format: int64
+          x-go-name: Artifacts
+        attachments:
+          $ref: '#/components/schemas/QuotaUsedSizeAssetsAttachments'
+        packages:
+          $ref: '#/components/schemas/QuotaUsedSizeAssetsPackages'
+      x-go-package: forgejo.org/modules/structs
+    ExternalTracker:
+      description: ExternalTracker represents settings for external tracker
+      type: object
+      properties:
+        external_tracker_format:
+          description: External Issue Tracker URL Format. Use the placeholders {user}, {repo} and {index} for the username, repository name and issue index.
+          type: string
+          x-go-name: ExternalTrackerFormat
+        external_tracker_regexp_pattern:
+          description: External Issue Tracker issue regular expression
+          type: string
+          x-go-name: ExternalTrackerRegexpPattern
+        external_tracker_style:
+          description: External Issue Tracker Number Format, either `numeric`, `alphanumeric`, or `regexp`
+          type: string
+          x-go-name: ExternalTrackerStyle
+        external_tracker_url:
+          description: URL of external issue tracker.
+          type: string
+          x-go-name: ExternalTrackerURL
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedAttachmentList:
+      description: QuotaUsedAttachmentList represents a list of attachment counting towards a user's quota
+      type: array
+      items:
+        $ref: '#/components/schemas/QuotaUsedAttachment'
+      x-go-package: forgejo.org/modules/structs
+    APIError:
+      description: APIError is an api error with a message
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/modules/structs
+    APIUnauthorizedError:
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    EditOrgOption:
+      description: EditOrgOption options for editing an organization
+      type: object
+      properties:
+        description:
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          x-go-name: Email
+        full_name:
+          type: string
+          x-go-name: FullName
+        location:
+          type: string
+          x-go-name: Location
+        repo_admin_change_team_access:
+          type: boolean
+          x-go-name: RepoAdminChangeTeamAccess
+        visibility:
+          description: possible values are `public`, `limited` or `private`
+          type: string
+          enum:
+          - public
+          - limited
+          - private
+          x-go-name: Visibility
+        website:
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    RegistrationToken:
+      description: RegistrationToken is a string used to register a runner with a server
+      type: object
+      properties:
+        token:
+          type: string
+          x-go-name: Token
+      x-go-package: forgejo.org/routers/api/v1/shared
+    QuotaUsedSizeRepos:
+      description: QuotaUsedSizeRepos represents the size-based repository quota usage of a user
+      type: object
+      properties:
+        private:
+          description: Storage size of the user's private repositories
+          type: integer
+          format: int64
+          x-go-name: Private
+        public:
+          description: Storage size of the user's public repositories
+          type: integer
+          format: int64
+          x-go-name: Public
+      x-go-package: forgejo.org/modules/structs
+    Comment:
+      description: Comment represents a comment on a commit or issue
+      type: object
+      properties:
+        assets:
+          description: The attachments to the comment
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+          x-go-name: Attachments
+        body:
+          description: The body of the comment
+          type: string
+          x-go-name: Body
+        created_at:
+          description: The time of the comment's creation
+          type: string
+          format: date-time
+          x-go-name: Created
+        html_url:
+          description: The HTML URL of the comment
+          type: string
+          x-go-name: HTMLURL
+        id:
+          description: The identifier of the comment
+          type: integer
+          format: int64
+          x-go-name: ID
+        issue_url:
+          description: The HTML URL of the issue if the comment is posted on an issue, else empty string
+          type: string
+          x-go-name: IssueURL
+        original_author:
+          description: The original author that posted the comment if it was not posted locally, else empty string
+          type: string
+          x-go-name: OriginalAuthor
+        original_author_id:
+          description: The ID of the original author that posted the comment if it was not posted locally, else 0
+          type: integer
+          format: int64
+          x-go-name: OriginalAuthorID
+        pull_request_url:
+          description: The HTML URL of the pull request if the comment is posted on a pull request, else empty string
+          type: string
+          x-go-name: PRURL
+        updated_at:
+          description: The time of the comment's update
+          type: string
+          format: date-time
+          x-go-name: Updated
+        user:
+          $ref: '#/components/schemas/User'
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsed:
+      description: QuotaUsed represents the quota usage of a user
+      type: object
+      properties:
+        size:
+          $ref: '#/components/schemas/QuotaUsedSize'
+      x-go-package: forgejo.org/modules/structs
+    QuotaGroupList:
+      description: QuotaGroupList represents a list of quota groups
+      type: array
+      items:
+        $ref: '#/components/schemas/QuotaGroup'
+      x-go-package: forgejo.org/modules/structs
+    QuotaRuleInfo:
+      description: QuotaRuleInfo contains information about a quota rule
+      type: object
+      properties:
+        limit:
+          description: The limit set by the rule
+          type: integer
+          format: int64
+          x-go-name: Limit
+        name:
+          description: Name of the rule (only shown to admins)
+          type: string
+          x-go-name: Name
+        subjects:
+          description: Subjects the rule affects
+          type: array
+          items:
+            type: string
+          x-go-name: Subjects
+      x-go-package: forgejo.org/modules/structs
+    ActionRunJob:
+      description: ActionRunJob represents a job of a run
+      type: object
+      properties:
+        attempt:
+          description: How many times the job has been attempted including the current attempt.
+          type: integer
+          format: int64
+          x-go-name: Attempt
+        handle:
+          description: Opaque identifier that uniquely identifies a single attempt of a job.
+          type: string
+          x-go-name: Handle
+        id:
+          description: Identifier of this job.
+          type: integer
+          format: int64
+          x-go-name: ID
+        name:
+          description: the action run job name
+          type: string
+          x-go-name: Name
+        needs:
+          description: the action run job needed ids
+          type: array
+          items:
+            type: string
+          x-go-name: Needs
+        owner_id:
+          description: the owner id
+          type: integer
+          format: int64
+          x-go-name: OwnerID
+        repo_id:
+          description: the repository id
+          type: integer
+          format: int64
+          x-go-name: RepoID
+        run_id:
+          description: Identifier of the workflow run this job belongs to.
+          type: integer
+          format: int64
+          x-go-name: RunID
+        runs_on:
+          description: the action run job labels to run on
+          type: array
+          items:
+            type: string
+          x-go-name: RunsOn
+        status:
+          description: the action run job status
+          type: string
+          x-go-name: Status
+        task_id:
+          description: the action run job latest task id
+          type: integer
+          format: int64
+          x-go-name: TaskID
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSize:
+      description: QuotaUsedSize represents the size-based quota usage of a user
+      type: object
+      properties:
+        assets:
+          $ref: '#/components/schemas/QuotaUsedSizeAssets'
+        git:
+          $ref: '#/components/schemas/QuotaUsedSizeGit'
+        repos:
+          $ref: '#/components/schemas/QuotaUsedSizeRepos'
+      x-go-package: forgejo.org/modules/structs
+    CreateTeamOption:
+      description: CreateTeamOption options for creating a team
+      type: object
+      required:
+      - name
+      properties:
+        can_create_org_repo:
+          type: boolean
+          x-go-name: CanCreateOrgRepo
+        description:
+          type: string
+          x-go-name: Description
+        includes_all_repositories:
+          type: boolean
+          x-go-name: IncludesAllRepositories
+        name:
+          type: string
+          x-go-name: Name
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - admin
+          x-go-name: Permission
+        units:
+          type: array
+          items:
+            type: string
+          x-go-name: Units
+          example:
+          - repo.actions
+          - repo.code
+          - repo.issues
+          - repo.ext_issues
+          - repo.wiki
+          - repo.ext_wiki
+          - repo.pulls
+          - repo.releases
+          - repo.projects
+          - repo.ext_wiki
+        units_map:
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: UnitsMap
+          example:
+            repo.actions: none
+            repo.code: read
+            repo.ext_issues: none
+            repo.ext_wiki: none
+            repo.issues: write
+            repo.packages: none
+            repo.projects: none
+            repo.pulls: owner
+            repo.releases: none
+            repo.wiki: admin
+      x-go-package: forgejo.org/modules/structs
+    EditHookOption:
+      description: EditHookOption options when modify one hook
+      type: object
+      properties:
+        active:
+          type: boolean
+          x-go-name: Active
+        authorization_header:
+          type: string
+          x-go-name: AuthorizationHeader
+        branch_filter:
+          type: string
+          x-go-name: BranchFilter
+        config:
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: Config
+        events:
+          type: array
+          items:
+            type: string
+          x-go-name: Events
+      x-go-package: forgejo.org/modules/structs
+    APIForbiddenError:
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    UpdateVariableOption:
+      type: object
+      title: UpdateVariableOption defines the properties of the variable to update.
+      required:
+      - value
+      properties:
+        name:
+          description: 'New name for the variable. If the field is empty, the variable name won''t be updated. Forgejo will convert it to
+
+            uppercase.'
+          type: string
+          x-go-name: Name
+        value:
+          description: 'Value of the variable to update. Special characters will be retained. Line endings will be normalized to LF to
+
+            match the behaviour of browsers. Encode the data with Base64 if line endings should be retained.'
+          type: string
+          x-go-name: Value
+      x-go-package: forgejo.org/modules/structs
+    Repository:
+      description: Repository represents a repository
+      type: object
+      properties:
+        allow_fast_forward_only_merge:
+          type: boolean
+          x-go-name: AllowFastForwardOnly
+        allow_merge_commits:
+          type: boolean
+          x-go-name: AllowMerge
+        allow_rebase:
+          type: boolean
+          x-go-name: AllowRebase
+        allow_rebase_explicit:
+          type: boolean
+          x-go-name: AllowRebaseMerge
+        allow_rebase_update:
+          type: boolean
+          x-go-name: AllowRebaseUpdate
+        allow_squash_merge:
+          type: boolean
+          x-go-name: AllowSquash
+        archived:
+          type: boolean
+          x-go-name: Archived
+        archived_at:
+          type: string
+          format: date-time
+          x-go-name: ArchivedAt
+        avatar_url:
+          type: string
+          x-go-name: AvatarURL
+        clone_url:
+          type: string
+          x-go-name: CloneURL
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        default_allow_maintainer_edit:
+          type: boolean
+          x-go-name: DefaultAllowMaintainerEdit
+        default_branch:
+          type: string
+          x-go-name: DefaultBranch
+        default_delete_branch_after_merge:
+          type: boolean
+          x-go-name: DefaultDeleteBranchAfterMerge
+        default_merge_style:
+          type: string
+          x-go-name: DefaultMergeStyle
+        default_update_style:
+          type: string
+          x-go-name: DefaultUpdateStyle
+        description:
+          type: string
+          x-go-name: Description
+        empty:
+          type: boolean
+          x-go-name: Empty
+        external_tracker:
+          $ref: '#/components/schemas/ExternalTracker'
+        external_wiki:
+          $ref: '#/components/schemas/ExternalWiki'
+        fork:
+          type: boolean
+          x-go-name: Fork
+        forks_count:
+          type: integer
+          format: int64
+          x-go-name: Forks
+        full_name:
+          type: string
+          x-go-name: FullName
+        globally_editable_wiki:
+          type: boolean
+          x-go-name: GloballyEditableWiki
+        has_actions:
+          type: boolean
+          x-go-name: HasActions
+        has_issues:
+          type: boolean
+          x-go-name: HasIssues
+        has_packages:
+          type: boolean
+          x-go-name: HasPackages
+        has_projects:
+          type: boolean
+          x-go-name: HasProjects
+        has_pull_requests:
+          type: boolean
+          x-go-name: HasPullRequests
+        has_releases:
+          type: boolean
+          x-go-name: HasReleases
+        has_wiki:
+          description: is the wiki enabled
+          type: boolean
+          x-go-name: HasWiki
+        has_wiki_contents:
+          description: have wiki pages ever been created
+          type: boolean
+          x-go-name: HasWikiContents
+        html_url:
+          type: string
+          x-go-name: HTMLURL
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        ignore_whitespace_conflicts:
+          type: boolean
+          x-go-name: IgnoreWhitespaceConflicts
+        internal:
+          type: boolean
+          x-go-name: Internal
+        internal_tracker:
+          $ref: '#/components/schemas/InternalTracker'
+        language:
+          type: string
+          x-go-name: Language
+        languages_url:
+          type: string
+          x-go-name: LanguagesURL
+        link:
+          type: string
+          x-go-name: Link
+        mirror:
+          type: boolean
+          x-go-name: Mirror
+        mirror_interval:
+          type: string
+          x-go-name: MirrorInterval
+        mirror_updated:
+          type: string
+          format: date-time
+          x-go-name: MirrorUpdated
+        name:
+          type: string
+          x-go-name: Name
+        object_format_name:
+          description: ObjectFormatName of the underlying git repository
+          type: string
+          enum:
+          - sha1
+          - sha256
+          x-go-name: ObjectFormatName
+        open_issues_count:
+          type: integer
+          format: int64
+          x-go-name: OpenIssues
+        open_pr_counter:
+          type: integer
+          format: int64
+          x-go-name: OpenPulls
+        original_url:
+          type: string
+          x-go-name: OriginalURL
+        owner:
+          $ref: '#/components/schemas/User'
+        parent:
+          $ref: '#/components/schemas/Repository'
+        permissions:
+          $ref: '#/components/schemas/Permission'
+        private:
+          type: boolean
+          x-go-name: Private
+        release_counter:
+          type: integer
+          format: int64
+          x-go-name: Releases
+        repo_transfer:
+          $ref: '#/components/schemas/RepoTransfer'
+        size:
+          type: integer
+          format: int64
+          x-go-name: Size
+        ssh_url:
+          type: string
+          x-go-name: SSHURL
+        stars_count:
+          type: integer
+          format: int64
+          x-go-name: Stars
+        template:
+          type: boolean
+          x-go-name: Template
+        topics:
+          type: array
+          items:
+            type: string
+          x-go-name: Topics
+        updated_at:
+          type: string
+          format: date-time
+          x-go-name: Updated
+        url:
+          type: string
+          x-go-name: URL
+        watchers_count:
+          type: integer
+          format: int64
+          x-go-name: Watchers
+        website:
+          type: string
+          x-go-name: Website
+        wiki_branch:
+          type: string
+          x-go-name: WikiBranch
+        wiki_clone_url:
+          type: string
+          x-go-name: WikiCloneURL
+        wiki_ssh_url:
+          type: string
+          x-go-name: WikiSSHURL
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedArtifactList:
+      description: QuotaUsedArtifactList represents a list of artifacts counting towards a user's quota
+      type: array
+      items:
+        $ref: '#/components/schemas/QuotaUsedArtifact'
+      x-go-package: forgejo.org/modules/structs
+    CreateHookOptionConfig:
+      description: 'CreateHookOptionConfig has all config options in it
+
+        required are "content_type" and "url" Required'
+      type: object
+      additionalProperties:
+        type: string
+      x-go-package: forgejo.org/modules/structs
+    CreateOrgOption:
+      description: CreateOrgOption options for creating an organization
+      type: object
+      required:
+      - username
+      properties:
+        description:
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          x-go-name: Email
+        full_name:
+          type: string
+          x-go-name: FullName
+        location:
+          type: string
+          x-go-name: Location
+        repo_admin_change_team_access:
+          type: boolean
+          x-go-name: RepoAdminChangeTeamAccess
+        username:
+          type: string
+          x-go-name: UserName
+        visibility:
+          description: possible values are `public` (default), `limited` or `private`
+          type: string
+          enum:
+          - public
+          - limited
+          - private
+          x-go-name: Visibility
+        website:
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSizeGit:
+      description: QuotaUsedSizeGit represents the size-based git (lfs) quota usage of a user
+      type: object
+      properties:
+        LFS:
+          description: Storage size of the user's Git LFS objects
+          type: integer
+          format: int64
+      x-go-package: forgejo.org/modules/structs
+  responses:
+    VariableList:
+      description: VariableList
+      headers:
+        X-Total-Count:
+          description: The total number of variables
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionVariable'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionVariable'
+    OrganizationList:
+      description: OrganizationList
+      headers:
+        X-Total-Count:
+          description: The total number of organizations
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Organization'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Organization'
+    QuotaUsedArtifactList:
+      description: QuotaUsedArtifactList
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuotaUsedArtifactList'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/QuotaUsedArtifactList'
+    Label:
+      description: Label
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Label'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/Label'
+    QuotaInfo:
+      description: QuotaInfo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuotaInfo'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/QuotaInfo'
+    OrganizationPermissions:
+      description: OrganizationPermissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OrganizationPermissions'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/OrganizationPermissions'
+    RegisterRunnerResponse:
+      description: RegisterRunnerResponse contains the details of the just registered runner.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterRunnerResponse'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/RegisterRunnerResponse'
+    Organization:
+      description: Organization
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Organization'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/Organization'
+    BlockedUserList:
+      description: BlockedUserList
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BlockedUser'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BlockedUser'
+    UserList:
+      description: UserList
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+    ActionVariable:
+      description: ActionVariable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ActionVariable'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/ActionVariable'
+    error:
+      description: APIError is error format response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIError'
+    ActionRunner:
+      description: ActionRunner represents a runner
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ActionRunner'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/ActionRunner'
+    validationError:
+      description: APIValidationError is error format response related to input validation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIValidationError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIValidationError'
+    SecretList:
+      description: SecretList
+      headers:
+        X-Total-Count:
+          description: The total number of secrets
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Secret'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Secret'
+    forbidden:
+      description: APIForbiddenError is a forbidden error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIForbiddenError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIForbiddenError'
+    HookListWithoutPagination:
+      description: HookListWithoutPagination - Hooks without pagination headers
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Hook'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Hook'
+    RegistrationToken:
+      description: RegistrationToken is a string used to register a runner with a server
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegistrationToken'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/RegistrationToken'
+    User:
+      description: User
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/User'
+    ActionRunnerList:
+      description: ActionRunnerList is a list of Forgejo Action runners
+      headers:
+        Link:
+          description: Links to other pages, if any
+          schema:
+            type: string
+        X-Total-Count:
+          description: Total number of runners matching the search criteria (excluding page and limit)
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionRunner'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionRunner'
+    Hook:
+      description: Hook
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Hook'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/Hook'
+    QuotaUsedAttachmentList:
+      description: QuotaUsedAttachmentList
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuotaUsedAttachmentList'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/QuotaUsedAttachmentList'
+    QuotaUsedPackageList:
+      description: QuotaUsedPackageList
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuotaUsedPackageList'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/QuotaUsedPackageList'
+    Repository:
+      description: Repository
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Repository'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/Repository'
+    ActivityFeedsList:
+      description: ActivityFeedsList
+      headers:
+        X-Total-Count:
+          description: The total number of activity feeds
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Activity'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Activity'
+    OrganizationListWithoutPagination:
+      description: OrganizationListWithoutPagination - Organizations without pagination headers
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Organization'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Organization'
+    RunJobList:
+      description: RunJobList is a list of action run jobs
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionRunJob'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionRunJob'
+    unauthorized:
+      description: APIUnauthorizedError is a unauthorized error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIUnauthorizedError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIUnauthorizedError'
+    empty:
+      description: APIEmpty is an empty response
+    Team:
+      description: Team
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Team'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/Team'
+    LabelList:
+      description: LabelList
+      headers:
+        X-Total-Count:
+          description: The total number of labels
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Label'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Label'
+    TeamList:
+      description: TeamList
+      headers:
+        X-Total-Count:
+          description: The total number of teams
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Team'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Team'
+    RepositoryList:
+      description: RepositoryList
+      headers:
+        X-Total-Count:
+          description: The total number of repositories
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Repository'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Repository'
+    notFound:
+      description: APINotFound is a not found error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APINotFound'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APINotFound'
+  securitySchemes:
+    AuthorizationHeaderToken:
+      description: API tokens must be prepended with "token" followed by a space.
+      type: apiKey
+      name: Authorization
+      in: header
+    BasicAuth:
+      type: http
+      scheme: basic
+    SudoHeader:
+      description: Sudo API request as the user provided as the key. Admin privileges are required.
+      type: apiKey
+      name: Sudo
+      in: header
+    SudoParam:
+      description: Sudo API request as the user provided as the key. Admin privileges are required.
+      type: apiKey
+      name: sudo
+      in: query
+    TOTPHeader:
+      description: Must be used in combination with BasicAuth if two-factor authentication is enabled.
+      type: apiKey
+      name: X-FORGEJO-OTP
+      in: header

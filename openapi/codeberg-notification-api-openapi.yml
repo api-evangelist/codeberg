@@ -1,0 +1,970 @@
+openapi: 3.2.0
+info:
+  description: This documentation describes the Forgejo API.
+  title: Forgejo Notification API
+  license:
+    name: This file is distributed under the MIT license for the purpose of interoperability
+    url: http://opensource.org/licenses/MIT
+  version: 16.0.0-dev-785-465b60ef+gitea-1.22.0
+servers:
+- url: /api/v1
+security:
+- BasicAuth: []
+- AuthorizationHeaderToken: []
+- SudoParam: []
+- SudoHeader: []
+- TOTPHeader: []
+tags:
+- name: Notification
+paths:
+  /notifications:
+    get:
+      tags:
+      - Notification
+      summary: List users's notification threads
+      operationId: notifyGetList
+      parameters:
+      - description: If true, show notifications marked as read. Default value is false
+        name: all
+        in: query
+        schema:
+          type: boolean
+      - description: 'Show notifications with the provided status types. Options are: unread, read and/or pinned. Defaults to unread & pinned.'
+        name: status-types
+        in: query
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: filter notifications by subject type
+        name: subject-type
+        in: query
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            enum:
+            - issue
+            - pull
+            - repository
+            type: string
+      - description: Only show notifications updated after the given time. This is a timestamp in RFC 3339 format
+        name: since
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - description: Only show notifications updated before the given time. This is a timestamp in RFC 3339 format
+        name: before
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/NotificationThreadList'
+    put:
+      tags:
+      - Notification
+      summary: Mark notification threads as read, pinned or unread
+      operationId: notifyReadList
+      parameters:
+      - description: Describes the last point that notifications were checked. Anything updated since this time will not be updated.
+        name: last_read_at
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - description: If true, mark all notifications on this repo. Default value is false
+        name: all
+        in: query
+        schema:
+          type: boolean
+      - description: 'Mark notifications with the provided status types. Options are: unread, read and/or pinned. Defaults to unread.'
+        name: status-types
+        in: query
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: Status to mark notifications as, Defaults to read.
+        name: to-status
+        in: query
+        schema:
+          type: string
+      responses:
+        '205':
+          $ref: '#/components/responses/NotificationThreadListWithoutPagination'
+  /notifications/new:
+    get:
+      tags:
+      - Notification
+      summary: Check if unread notifications exist
+      operationId: notifyNewAvailable
+      responses:
+        '200':
+          $ref: '#/components/responses/NotificationCount'
+  /notifications/threads/{id}:
+    get:
+      tags:
+      - Notification
+      summary: Get notification thread by ID
+      operationId: notifyGetThread
+      parameters:
+      - description: id of notification thread
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/NotificationThread'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    patch:
+      tags:
+      - Notification
+      summary: Mark notification thread as read by ID
+      operationId: notifyReadThread
+      parameters:
+      - description: id of notification thread
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - description: Status to mark notifications as
+        name: to-status
+        in: query
+        schema:
+          type: string
+          default: read
+      responses:
+        '205':
+          $ref: '#/components/responses/NotificationThread'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /repos/{owner}/{repo}/notifications:
+    get:
+      tags:
+      - Notification
+      summary: List users's notification threads on a specific repo
+      operationId: notifyGetRepoList
+      parameters:
+      - description: owner of the repo
+        name: owner
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the repo
+        name: repo
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: If true, show notifications marked as read. Default value is false
+        name: all
+        in: query
+        schema:
+          type: boolean
+      - description: 'Show notifications with the provided status types. Options are: unread, read and/or pinned. Defaults to unread & pinned'
+        name: status-types
+        in: query
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: filter notifications by subject type
+        name: subject-type
+        in: query
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            enum:
+            - issue
+            - pull
+            - repository
+            type: string
+      - description: Only show notifications updated after the given time. This is a timestamp in RFC 3339 format
+        name: since
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - description: Only show notifications updated before the given time. This is a timestamp in RFC 3339 format
+        name: before
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/NotificationThreadList'
+    put:
+      tags:
+      - Notification
+      summary: Mark notification threads as read, pinned or unread on a specific repo
+      operationId: notifyReadRepoList
+      parameters:
+      - description: owner of the repo
+        name: owner
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the repo
+        name: repo
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: If true, mark all notifications on this repo. Default value is false
+        name: all
+        in: query
+        schema:
+          type: boolean
+      - description: 'Mark notifications with the provided status types. Options are: unread, read and/or pinned. Defaults to unread.'
+        name: status-types
+        in: query
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: Status to mark notifications as. Defaults to read.
+        name: to-status
+        in: query
+        schema:
+          type: string
+      - description: Describes the last point that notifications were checked. Anything updated since this time will not be updated.
+        name: last_read_at
+        in: query
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '205':
+          $ref: '#/components/responses/NotificationThreadListWithoutPagination'
+components:
+  responses:
+    forbidden:
+      description: APIForbiddenError is a forbidden error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIForbiddenError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIForbiddenError'
+    NotificationCount:
+      description: Number of unread notifications
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotificationCount'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/NotificationCount'
+    NotificationThreadList:
+      description: NotificationThreadList
+      headers:
+        X-Total-Count:
+          description: The total number of notification threads
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotificationThread'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotificationThread'
+    NotificationThreadListWithoutPagination:
+      description: NotificationThreadListWithoutPagination - Notification threads without pagination headers
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotificationThread'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotificationThread'
+    notFound:
+      description: APINotFound is a not found error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APINotFound'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APINotFound'
+    NotificationThread:
+      description: NotificationThread
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotificationThread'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/NotificationThread'
+  schemas:
+    StateType:
+      description: StateType issue state type
+      type: string
+      x-go-package: forgejo.org/modules/structs
+    NotificationCount:
+      description: NotificationCount number of unread notifications
+      type: object
+      properties:
+        new:
+          type: integer
+          format: int64
+          x-go-name: New
+      x-go-package: forgejo.org/modules/structs
+    Team:
+      description: Team represents a team in an organization
+      type: object
+      properties:
+        can_create_org_repo:
+          type: boolean
+          x-go-name: CanCreateOrgRepo
+        description:
+          type: string
+          x-go-name: Description
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        includes_all_repositories:
+          type: boolean
+          x-go-name: IncludesAllRepositories
+        name:
+          type: string
+          x-go-name: Name
+        organization:
+          $ref: '#/components/schemas/Organization'
+        permission:
+          type: string
+          enum:
+          - none
+          - read
+          - write
+          - admin
+          - owner
+          x-go-name: Permission
+        units:
+          type: array
+          items:
+            type: string
+          x-go-name: Units
+          example:
+          - repo.code
+          - repo.issues
+          - repo.ext_issues
+          - repo.wiki
+          - repo.pulls
+          - repo.releases
+          - repo.projects
+          - repo.ext_wiki
+        units_map:
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: UnitsMap
+          example:
+            repo.actions: none
+            repo.code: read
+            repo.ext_issues: none
+            repo.ext_wiki: none
+            repo.issues: write
+            repo.packages: none
+            repo.projects: none
+            repo.pulls: owner
+            repo.releases: none
+            repo.wiki: admin
+      x-go-package: forgejo.org/modules/structs
+    InternalTracker:
+      description: InternalTracker represents settings for internal tracker
+      type: object
+      properties:
+        allow_only_contributors_to_track_time:
+          description: Let only contributors track time (Built-in issue tracker)
+          type: boolean
+          x-go-name: AllowOnlyContributorsToTrackTime
+        enable_issue_dependencies:
+          description: Enable dependencies for issues and pull requests (Built-in issue tracker)
+          type: boolean
+          x-go-name: EnableIssueDependencies
+        enable_time_tracker:
+          description: Enable time tracking (Built-in issue tracker)
+          type: boolean
+          x-go-name: EnableTimeTracker
+      x-go-package: forgejo.org/modules/structs
+    RepoTransfer:
+      description: RepoTransfer represents a pending repo transfer
+      type: object
+      properties:
+        doer:
+          $ref: '#/components/schemas/User'
+        recipient:
+          $ref: '#/components/schemas/User'
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+          x-go-name: Teams
+      x-go-package: forgejo.org/modules/structs
+    APIForbiddenError:
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    Permission:
+      description: Permission represents a set of permissions
+      type: object
+      properties:
+        admin:
+          type: boolean
+          x-go-name: Admin
+        pull:
+          type: boolean
+          x-go-name: Pull
+        push:
+          type: boolean
+          x-go-name: Push
+      x-go-package: forgejo.org/modules/structs
+    Repository:
+      description: Repository represents a repository
+      type: object
+      properties:
+        allow_fast_forward_only_merge:
+          type: boolean
+          x-go-name: AllowFastForwardOnly
+        allow_merge_commits:
+          type: boolean
+          x-go-name: AllowMerge
+        allow_rebase:
+          type: boolean
+          x-go-name: AllowRebase
+        allow_rebase_explicit:
+          type: boolean
+          x-go-name: AllowRebaseMerge
+        allow_rebase_update:
+          type: boolean
+          x-go-name: AllowRebaseUpdate
+        allow_squash_merge:
+          type: boolean
+          x-go-name: AllowSquash
+        archived:
+          type: boolean
+          x-go-name: Archived
+        archived_at:
+          type: string
+          format: date-time
+          x-go-name: ArchivedAt
+        avatar_url:
+          type: string
+          x-go-name: AvatarURL
+        clone_url:
+          type: string
+          x-go-name: CloneURL
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        default_allow_maintainer_edit:
+          type: boolean
+          x-go-name: DefaultAllowMaintainerEdit
+        default_branch:
+          type: string
+          x-go-name: DefaultBranch
+        default_delete_branch_after_merge:
+          type: boolean
+          x-go-name: DefaultDeleteBranchAfterMerge
+        default_merge_style:
+          type: string
+          x-go-name: DefaultMergeStyle
+        default_update_style:
+          type: string
+          x-go-name: DefaultUpdateStyle
+        description:
+          type: string
+          x-go-name: Description
+        empty:
+          type: boolean
+          x-go-name: Empty
+        external_tracker:
+          $ref: '#/components/schemas/ExternalTracker'
+        external_wiki:
+          $ref: '#/components/schemas/ExternalWiki'
+        fork:
+          type: boolean
+          x-go-name: Fork
+        forks_count:
+          type: integer
+          format: int64
+          x-go-name: Forks
+        full_name:
+          type: string
+          x-go-name: FullName
+        globally_editable_wiki:
+          type: boolean
+          x-go-name: GloballyEditableWiki
+        has_actions:
+          type: boolean
+          x-go-name: HasActions
+        has_issues:
+          type: boolean
+          x-go-name: HasIssues
+        has_packages:
+          type: boolean
+          x-go-name: HasPackages
+        has_projects:
+          type: boolean
+          x-go-name: HasProjects
+        has_pull_requests:
+          type: boolean
+          x-go-name: HasPullRequests
+        has_releases:
+          type: boolean
+          x-go-name: HasReleases
+        has_wiki:
+          description: is the wiki enabled
+          type: boolean
+          x-go-name: HasWiki
+        has_wiki_contents:
+          description: have wiki pages ever been created
+          type: boolean
+          x-go-name: HasWikiContents
+        html_url:
+          type: string
+          x-go-name: HTMLURL
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        ignore_whitespace_conflicts:
+          type: boolean
+          x-go-name: IgnoreWhitespaceConflicts
+        internal:
+          type: boolean
+          x-go-name: Internal
+        internal_tracker:
+          $ref: '#/components/schemas/InternalTracker'
+        language:
+          type: string
+          x-go-name: Language
+        languages_url:
+          type: string
+          x-go-name: LanguagesURL
+        link:
+          type: string
+          x-go-name: Link
+        mirror:
+          type: boolean
+          x-go-name: Mirror
+        mirror_interval:
+          type: string
+          x-go-name: MirrorInterval
+        mirror_updated:
+          type: string
+          format: date-time
+          x-go-name: MirrorUpdated
+        name:
+          type: string
+          x-go-name: Name
+        object_format_name:
+          description: ObjectFormatName of the underlying git repository
+          type: string
+          enum:
+          - sha1
+          - sha256
+          x-go-name: ObjectFormatName
+        open_issues_count:
+          type: integer
+          format: int64
+          x-go-name: OpenIssues
+        open_pr_counter:
+          type: integer
+          format: int64
+          x-go-name: OpenPulls
+        original_url:
+          type: string
+          x-go-name: OriginalURL
+        owner:
+          $ref: '#/components/schemas/User'
+        parent:
+          $ref: '#/components/schemas/Repository'
+        permissions:
+          $ref: '#/components/schemas/Permission'
+        private:
+          type: boolean
+          x-go-name: Private
+        release_counter:
+          type: integer
+          format: int64
+          x-go-name: Releases
+        repo_transfer:
+          $ref: '#/components/schemas/RepoTransfer'
+        size:
+          type: integer
+          format: int64
+          x-go-name: Size
+        ssh_url:
+          type: string
+          x-go-name: SSHURL
+        stars_count:
+          type: integer
+          format: int64
+          x-go-name: Stars
+        template:
+          type: boolean
+          x-go-name: Template
+        topics:
+          type: array
+          items:
+            type: string
+          x-go-name: Topics
+        updated_at:
+          type: string
+          format: date-time
+          x-go-name: Updated
+        url:
+          type: string
+          x-go-name: URL
+        watchers_count:
+          type: integer
+          format: int64
+          x-go-name: Watchers
+        website:
+          type: string
+          x-go-name: Website
+        wiki_branch:
+          type: string
+          x-go-name: WikiBranch
+        wiki_clone_url:
+          type: string
+          x-go-name: WikiCloneURL
+        wiki_ssh_url:
+          type: string
+          x-go-name: WikiSSHURL
+      x-go-package: forgejo.org/modules/structs
+    User:
+      description: User represents a user
+      type: object
+      properties:
+        active:
+          description: Is user active
+          type: boolean
+          x-go-name: IsActive
+        avatar_url:
+          description: URL to the user's avatar
+          type: string
+          x-go-name: AvatarURL
+        created:
+          type: string
+          format: date-time
+          x-go-name: Created
+        description:
+          description: the user's description
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          format: email
+          x-go-name: Email
+        followers_count:
+          description: user counts
+          type: integer
+          format: int64
+          x-go-name: Followers
+        following_count:
+          type: integer
+          format: int64
+          x-go-name: Following
+        full_name:
+          description: the user's full name
+          type: string
+          x-go-name: FullName
+        html_url:
+          description: URL to the user's profile page
+          type: string
+          x-go-name: HTMLURL
+        id:
+          description: the user's id
+          type: integer
+          format: int64
+          x-go-name: ID
+        is_admin:
+          description: Is the user an administrator
+          type: boolean
+          x-go-name: IsAdmin
+        language:
+          description: User locale
+          type: string
+          x-go-name: Language
+        last_login:
+          type: string
+          format: date-time
+          x-go-name: LastLogin
+        location:
+          description: the user's location
+          type: string
+          x-go-name: Location
+        login:
+          description: the user's username
+          type: string
+          x-go-name: UserName
+        login_name:
+          description: the user's authentication sign-in name.
+          type: string
+          default: empty
+          x-go-name: LoginName
+        prohibit_login:
+          description: Is user login prohibited
+          type: boolean
+          x-go-name: ProhibitLogin
+        pronouns:
+          description: the user's pronouns
+          type: string
+          x-go-name: Pronouns
+        restricted:
+          description: Is user restricted
+          type: boolean
+          x-go-name: Restricted
+        source_id:
+          description: The ID of the user's Authentication Source
+          type: integer
+          format: int64
+          x-go-name: SourceID
+        starred_repos_count:
+          type: integer
+          format: int64
+          x-go-name: StarredRepos
+        visibility:
+          description: 'User visibility level option: public, limited, private'
+          type: string
+          x-go-name: Visibility
+        website:
+          description: the user's website
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    APINotFound:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          x-go-name: Errors
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    ExternalWiki:
+      description: ExternalWiki represents setting for external wiki
+      type: object
+      properties:
+        external_wiki_url:
+          description: URL of external wiki.
+          type: string
+          x-go-name: ExternalWikiURL
+      x-go-package: forgejo.org/modules/structs
+    NotificationThread:
+      description: NotificationThread expose Notification on API
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        pinned:
+          type: boolean
+          x-go-name: Pinned
+        repository:
+          $ref: '#/components/schemas/Repository'
+        subject:
+          $ref: '#/components/schemas/NotificationSubject'
+        unread:
+          type: boolean
+          x-go-name: Unread
+        updated_at:
+          type: string
+          format: date-time
+          x-go-name: UpdatedAt
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/modules/structs
+    ExternalTracker:
+      description: ExternalTracker represents settings for external tracker
+      type: object
+      properties:
+        external_tracker_format:
+          description: External Issue Tracker URL Format. Use the placeholders {user}, {repo} and {index} for the username, repository name and issue index.
+          type: string
+          x-go-name: ExternalTrackerFormat
+        external_tracker_regexp_pattern:
+          description: External Issue Tracker issue regular expression
+          type: string
+          x-go-name: ExternalTrackerRegexpPattern
+        external_tracker_style:
+          description: External Issue Tracker Number Format, either `numeric`, `alphanumeric`, or `regexp`
+          type: string
+          x-go-name: ExternalTrackerStyle
+        external_tracker_url:
+          description: URL of external issue tracker.
+          type: string
+          x-go-name: ExternalTrackerURL
+      x-go-package: forgejo.org/modules/structs
+    NotificationSubject:
+      description: NotificationSubject contains the notification subject (Issue/Pull/Commit)
+      type: object
+      properties:
+        html_url:
+          type: string
+          x-go-name: HTMLURL
+        latest_comment_html_url:
+          type: string
+          x-go-name: LatestCommentHTMLURL
+        latest_comment_url:
+          type: string
+          x-go-name: LatestCommentURL
+        state:
+          $ref: '#/components/schemas/StateType'
+        title:
+          type: string
+          x-go-name: Title
+        type:
+          $ref: '#/components/schemas/NotifySubjectType'
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/modules/structs
+    Organization:
+      description: Organization represents an organization
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          x-go-name: AvatarURL
+        created:
+          type: string
+          format: date-time
+          x-go-name: Created
+        description:
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          x-go-name: Email
+        full_name:
+          type: string
+          x-go-name: FullName
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        location:
+          type: string
+          x-go-name: Location
+        name:
+          type: string
+          x-go-name: Name
+        repo_admin_change_team_access:
+          type: boolean
+          x-go-name: RepoAdminChangeTeamAccess
+        username:
+          description: deprecated
+          type: string
+          x-go-name: UserName
+        visibility:
+          type: string
+          x-go-name: Visibility
+        website:
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    NotifySubjectType:
+      description: NotifySubjectType represent type of notification subject
+      type: string
+      x-go-package: forgejo.org/modules/structs
+  securitySchemes:
+    AuthorizationHeaderToken:
+      description: API tokens must be prepended with "token" followed by a space.
+      type: apiKey
+      name: Authorization
+      in: header
+    BasicAuth:
+      type: http
+      scheme: basic
+    SudoHeader:
+      description: Sudo API request as the user provided as the key. Admin privileges are required.
+      type: apiKey
+      name: Sudo
+      in: header
+    SudoParam:
+      description: Sudo API request as the user provided as the key. Admin privileges are required.
+      type: apiKey
+      name: sudo
+      in: query
+    TOTPHeader:
+      description: Must be used in combination with BasicAuth if two-factor authentication is enabled.
+      type: apiKey
+      name: X-FORGEJO-OTP
+      in: header

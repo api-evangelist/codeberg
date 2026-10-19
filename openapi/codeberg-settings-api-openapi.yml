@@ -1,0 +1,202 @@
+openapi: 3.2.0
+info:
+  description: This documentation describes the Forgejo API.
+  title: Forgejo Settings API
+  license:
+    name: This file is distributed under the MIT license for the purpose of interoperability
+    url: http://opensource.org/licenses/MIT
+  version: 16.0.0-dev-785-465b60ef+gitea-1.22.0
+servers:
+- url: /api/v1
+security:
+- BasicAuth: []
+- AuthorizationHeaderToken: []
+- SudoParam: []
+- SudoHeader: []
+- TOTPHeader: []
+tags:
+- name: Settings
+paths:
+  /settings/api:
+    get:
+      tags:
+      - Settings
+      summary: Get instance's global settings for api
+      operationId: getGeneralAPISettings
+      responses:
+        '200':
+          $ref: '#/components/responses/GeneralAPISettings'
+  /settings/attachment:
+    get:
+      tags:
+      - Settings
+      summary: Get instance's global settings for Attachment
+      operationId: getGeneralAttachmentSettings
+      responses:
+        '200':
+          $ref: '#/components/responses/GeneralAttachmentSettings'
+  /settings/repository:
+    get:
+      tags:
+      - Settings
+      summary: Get instance's global settings for repositories
+      operationId: getGeneralRepositorySettings
+      responses:
+        '200':
+          $ref: '#/components/responses/GeneralRepoSettings'
+  /settings/ui:
+    get:
+      tags:
+      - Settings
+      summary: Get instance's global settings for ui
+      operationId: getGeneralUISettings
+      responses:
+        '200':
+          $ref: '#/components/responses/GeneralUISettings'
+components:
+  schemas:
+    GeneralUISettings:
+      description: GeneralUISettings contains global ui settings exposed by API
+      type: object
+      properties:
+        allowed_reactions:
+          type: array
+          items:
+            type: string
+          x-go-name: AllowedReactions
+        custom_emojis:
+          type: array
+          items:
+            type: string
+          x-go-name: CustomEmojis
+        default_theme:
+          type: string
+          x-go-name: DefaultTheme
+      x-go-package: forgejo.org/modules/structs
+    GeneralAPISettings:
+      description: GeneralAPISettings contains global api settings exposed by it
+      type: object
+      properties:
+        default_git_trees_per_page:
+          type: integer
+          format: int64
+          x-go-name: DefaultGitTreesPerPage
+        default_max_blob_size:
+          type: integer
+          format: int64
+          x-go-name: DefaultMaxBlobSize
+        default_paging_num:
+          type: integer
+          format: int64
+          x-go-name: DefaultPagingNum
+        max_response_items:
+          type: integer
+          format: int64
+          x-go-name: MaxResponseItems
+      x-go-package: forgejo.org/modules/structs
+    GeneralRepoSettings:
+      description: GeneralRepoSettings contains global repository settings exposed by API
+      type: object
+      properties:
+        forks_disabled:
+          type: boolean
+          x-go-name: ForksDisabled
+        http_git_disabled:
+          type: boolean
+          x-go-name: HTTPGitDisabled
+        lfs_disabled:
+          type: boolean
+          x-go-name: LFSDisabled
+        migrations_disabled:
+          type: boolean
+          x-go-name: MigrationsDisabled
+        mirrors_disabled:
+          type: boolean
+          x-go-name: MirrorsDisabled
+        stars_disabled:
+          type: boolean
+          x-go-name: StarsDisabled
+        time_tracking_disabled:
+          type: boolean
+          x-go-name: TimeTrackingDisabled
+      x-go-package: forgejo.org/modules/structs
+    GeneralAttachmentSettings:
+      description: GeneralAttachmentSettings contains global Attachment settings exposed by API
+      type: object
+      properties:
+        allowed_types:
+          type: string
+          x-go-name: AllowedTypes
+        enabled:
+          type: boolean
+          x-go-name: Enabled
+        max_files:
+          type: integer
+          format: int64
+          x-go-name: MaxFiles
+        max_size:
+          type: integer
+          format: int64
+          x-go-name: MaxSize
+      x-go-package: forgejo.org/modules/structs
+  responses:
+    GeneralAPISettings:
+      description: GeneralAPISettings
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralAPISettings'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/GeneralAPISettings'
+    GeneralRepoSettings:
+      description: GeneralRepoSettings
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralRepoSettings'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/GeneralRepoSettings'
+    GeneralUISettings:
+      description: GeneralUISettings
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralUISettings'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/GeneralUISettings'
+    GeneralAttachmentSettings:
+      description: GeneralAttachmentSettings
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralAttachmentSettings'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/GeneralAttachmentSettings'
+  securitySchemes:
+    AuthorizationHeaderToken:
+      description: API tokens must be prepended with "token" followed by a space.
+      type: apiKey
+      name: Authorization
+      in: header
+    BasicAuth:
+      type: http
+      scheme: basic
+    SudoHeader:
+      description: Sudo API request as the user provided as the key. Admin privileges are required.
+      type: apiKey
+      name: Sudo
+      in: header
+    SudoParam:
+      description: Sudo API request as the user provided as the key. Admin privileges are required.
+      type: apiKey
+      name: sudo
+      in: query
+    TOTPHeader:
+      description: Must be used in combination with BasicAuth if two-factor authentication is enabled.
+      type: apiKey
+      name: X-FORGEJO-OTP
+      in: header

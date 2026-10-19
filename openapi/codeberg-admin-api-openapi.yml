@@ -1,0 +1,3046 @@
+openapi: 3.2.0
+info:
+  description: This documentation describes the Forgejo API.
+  title: Forgejo Admin API
+  license:
+    name: This file is distributed under the MIT license for the purpose of interoperability
+    url: http://opensource.org/licenses/MIT
+  version: 16.0.0-dev-785-465b60ef+gitea-1.22.0
+servers:
+- url: /api/v1
+security:
+- BasicAuth: []
+- AuthorizationHeaderToken: []
+- SudoParam: []
+- SudoHeader: []
+- TOTPHeader: []
+tags:
+- name: Admin
+paths:
+  /admin/actions/runners:
+    get:
+      tags:
+      - Admin
+      summary: Get all runners, no matter whether they are global runners or scoped to an…
+      operationId: getAdminRunners
+      parameters:
+      - description: whether to include all visible runners (true) or only those that are directly owned by the instance (false)
+        name: visible
+        in: query
+        schema:
+          type: boolean
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/ActionRunnerList'
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+    post:
+      tags:
+      - Admin
+      summary: Register a new global runner
+      operationId: registerAdminRunner
+      responses:
+        '201':
+          $ref: '#/components/responses/RegisterRunnerResponse'
+        '400':
+          $ref: '#/components/responses/error'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRunnerOptions'
+  /admin/actions/runners/jobs:
+    get:
+      tags:
+      - Admin
+      summary: Get action run jobs
+      operationId: adminGetActionRunJobs
+      parameters:
+      - description: a comma separated list of labels to search for
+        name: labels
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/RunJobList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /admin/actions/runners/registration-token:
+    get:
+      description: This operation has been deprecated in Forgejo 15. Use the web UI or `/admin/actions/runners` instead.
+      tags:
+      - Admin
+      summary: Get a runner registration token for registering global runners
+      operationId: adminGetRunnerRegistrationToken
+      deprecated: true
+      responses:
+        '200':
+          $ref: '#/components/responses/RegistrationToken'
+  /admin/actions/runners/{runner_id}:
+    get:
+      tags:
+      - Admin
+      summary: Get a particular runner, no matter whether it is a global runner or scoped to…
+      operationId: getAdminRunner
+      parameters:
+      - description: ID of the runner
+        name: runner_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ActionRunner'
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Admin
+      summary: Delete a particular runner, no matter whether it is a global runner or scoped…
+      operationId: deleteAdminRunner
+      parameters:
+      - description: ID of the runner
+        name: runner_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: runner has been deleted
+        '400':
+          $ref: '#/components/responses/error'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /admin/cron:
+    get:
+      tags:
+      - Admin
+      summary: List cron tasks
+      operationId: adminCronList
+      parameters:
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/CronList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /admin/cron/{task}:
+    post:
+      tags:
+      - Admin
+      summary: Run cron task
+      operationId: adminCronRun
+      parameters:
+      - description: task to run
+        name: task
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /admin/emails:
+    get:
+      tags:
+      - Admin
+      summary: List all users' email addresses
+      operationId: adminGetAllEmails
+      parameters:
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/EmailList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /admin/emails/search:
+    get:
+      tags:
+      - Admin
+      summary: Search users' email addresses
+      operationId: adminSearchEmails
+      parameters:
+      - description: keyword
+        name: q
+        in: query
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/EmailList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /admin/hooks:
+    get:
+      tags:
+      - Admin
+      summary: List global (system) webhooks
+      operationId: adminListHooks
+      parameters:
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/HookListWithoutPagination'
+    post:
+      tags:
+      - Admin
+      summary: Create a hook
+      operationId: adminCreateHook
+      responses:
+        '201':
+          $ref: '#/components/responses/Hook'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHookOption'
+        required: true
+  /admin/hooks/{id}:
+    get:
+      tags:
+      - Admin
+      summary: Get a hook
+      operationId: adminGetHook
+      parameters:
+      - description: id of the hook to get
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/Hook'
+    delete:
+      tags:
+      - Admin
+      summary: Delete a hook
+      operationId: adminDeleteHook
+      parameters:
+      - description: id of the hook to delete
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+    patch:
+      tags:
+      - Admin
+      summary: Update a hook
+      operationId: adminEditHook
+      parameters:
+      - description: id of the hook to update
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          $ref: '#/components/responses/Hook'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditHookOption'
+  /admin/orgs:
+    get:
+      tags:
+      - Admin
+      summary: List all organizations
+      operationId: adminGetAllOrgs
+      parameters:
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/OrganizationList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /admin/quota/groups:
+    get:
+      tags:
+      - Admin
+      summary: List the available quota groups
+      operationId: adminListQuotaGroups
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaGroupList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+    post:
+      tags:
+      - Admin
+      summary: Create a new quota group
+      operationId: adminCreateQuotaGroup
+      responses:
+        '201':
+          $ref: '#/components/responses/QuotaGroup'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '409':
+          $ref: '#/components/responses/error'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuotaGroupOptions'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/CreateQuotaGroupOptions'
+        description: Definition of the quota group
+        required: true
+  /admin/quota/groups/{quotagroup}:
+    get:
+      tags:
+      - Admin
+      summary: Get information about the quota group
+      operationId: adminGetQuotaGroup
+      parameters:
+      - description: quota group to query
+        name: quotagroup
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaGroup'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Admin
+      summary: Delete a quota group
+      operationId: adminDeleteQuotaGroup
+      parameters:
+      - description: quota group to delete
+        name: quotagroup
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /admin/quota/groups/{quotagroup}/rules/{quotarule}:
+    put:
+      tags:
+      - Admin
+      summary: Adds a rule to a quota group
+      operationId: adminAddRuleToQuotaGroup
+      parameters:
+      - description: quota group to add a rule to
+        name: quotagroup
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: the name of the quota rule to add to the group
+        name: quotarule
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '409':
+          $ref: '#/components/responses/error'
+        '422':
+          $ref: '#/components/responses/validationError'
+    delete:
+      tags:
+      - Admin
+      summary: Removes a rule from a quota group
+      operationId: adminRemoveRuleFromQuotaGroup
+      parameters:
+      - description: quota group to remove a rule from
+        name: quotagroup
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: the name of the quota rule to remove from the group
+        name: quotarule
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/empty'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /admin/quota/groups/{quotagroup}/users:
+    get:
+      tags:
+      - Admin
+      summary: List users in a quota group
+      operationId: adminListUsersInQuotaGroup
+      parameters:
+      - description: quota group to list members of
+        name: quotagroup
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/UserList'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /admin/quota/groups/{quotagroup}/users/{username}:
+    put:
+      tags:
+      - Admin
+      summary: Add a user to a quota group
+      operationId: adminAddUserToQuotaGroup
+      parameters:
+      - description: quota group to add the user to
+        name: quotagroup
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user to add to the quota group
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '409':
+          $ref: '#/components/responses/error'
+        '422':
+          $ref: '#/components/responses/validationError'
+    delete:
+      tags:
+      - Admin
+      summary: Remove a user from a quota group
+      operationId: adminRemoveUserFromQuotaGroup
+      parameters:
+      - description: quota group to remove a user from
+        name: quotagroup
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: username of the user to remove from the quota group
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /admin/quota/rules:
+    get:
+      tags:
+      - Admin
+      summary: List the available quota rules
+      operationId: adminListQuotaRules
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaRuleInfoList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+    post:
+      tags:
+      - Admin
+      summary: Create a new quota rule
+      operationId: adminCreateQuotaRule
+      responses:
+        '201':
+          $ref: '#/components/responses/QuotaRuleInfo'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '409':
+          $ref: '#/components/responses/error'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuotaRuleOptions'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/CreateQuotaRuleOptions'
+        description: Definition of the quota rule
+        required: true
+  /admin/quota/rules/{quotarule}:
+    get:
+      tags:
+      - Admin
+      summary: Get information about a quota rule
+      operationId: adminGetQuotaRule
+      parameters:
+      - description: quota rule to query
+        name: quotarule
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaRuleInfo'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Admin
+      summary: Deletes a quota rule
+      operationId: adminDeleteQuotaRule
+      parameters:
+      - description: quota rule to delete
+        name: quotarule
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    patch:
+      tags:
+      - Admin
+      summary: Change an existing quota rule
+      operationId: adminEditQuotaRule
+      parameters:
+      - description: Quota rule to change
+        name: quotarule
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaRuleInfo'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditQuotaRuleOptions'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/EditQuotaRuleOptions'
+        required: true
+  /admin/runners/jobs:
+    get:
+      description: This operation has been deprecated in Forgejo 15. Use `/admin/actions/runners/jobs` instead.
+      tags:
+      - Admin
+      summary: Search action jobs according to filter conditions
+      operationId: adminSearchRunJobs
+      deprecated: true
+      parameters:
+      - description: a comma separated list of run job labels to search for
+        name: labels
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/RunJobList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /admin/runners/registration-token:
+    get:
+      description: This operation has been deprecated in Forgejo 15. Use the web UI or `/admin/actions/runners` instead.
+      tags:
+      - Admin
+      summary: Get a runner registration token for registering global runners
+      operationId: adminGetRegistrationToken
+      deprecated: true
+      responses:
+        '200':
+          $ref: '#/components/responses/RegistrationToken'
+  /admin/unadopted:
+    get:
+      tags:
+      - Admin
+      summary: List unadopted repositories
+      operationId: adminUnadoptedList
+      parameters:
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      - description: pattern of repositories to search for
+        name: pattern
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/StringSlice'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /admin/unadopted/{owner}/{repo}:
+    post:
+      tags:
+      - Admin
+      summary: Adopt unadopted files as a repository
+      operationId: adminAdoptRepository
+      parameters:
+      - description: owner of the repo
+        name: owner
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the repo
+        name: repo
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Admin
+      summary: Delete unadopted files
+      operationId: adminDeleteUnadoptedRepository
+      parameters:
+      - description: owner of the repo
+        name: owner
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: name of the repo
+        name: repo
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+  /admin/users:
+    get:
+      tags:
+      - Admin
+      summary: Search users according filter conditions
+      operationId: adminSearchUsers
+      parameters:
+      - description: ID of the user's login source to search for
+        name: source_id
+        in: query
+        schema:
+          type: integer
+          format: int64
+      - description: user's login name to search for
+        name: login_name
+        in: query
+        schema:
+          type: string
+      - description: whether or not to filter users with the 2fa enabled
+        name: is_2fa_enabled
+        in: query
+        schema:
+          type: boolean
+      - description: sort order of results
+        name: sort
+        in: query
+        schema:
+          type: string
+          enum:
+          - oldest
+          - newest
+          - alphabetically
+          - reversealphabetically
+          - recentupdate
+          - leastupdate
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/UserList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+    post:
+      tags:
+      - Admin
+      summary: Create a user account
+      operationId: adminCreateUser
+      responses:
+        '201':
+          $ref: '#/components/responses/User'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserOption'
+  /admin/users/{username}:
+    delete:
+      tags:
+      - Admin
+      summary: Delete user account
+      operationId: adminDeleteUser
+      parameters:
+      - description: username of user to delete
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: purge the user from the system completely
+        name: purge
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+    patch:
+      tags:
+      - Admin
+      summary: Edit an existing user
+      operationId: adminEditUser
+      parameters:
+      - description: username of user to edit
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserOption'
+  /admin/users/{username}/emails:
+    get:
+      tags:
+      - Admin
+      summary: List all email addresses for a user
+      operationId: adminListUserEmails
+      parameters:
+      - description: username of user to get email addresses of
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmailList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    delete:
+      tags:
+      - Admin
+      summary: Delete email addresses from a user's account
+      operationId: adminDeleteUserEmails
+      parameters:
+      - description: username of user to delete email addresses from
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteEmailOption'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/DeleteEmailOption'
+  /admin/users/{username}/keys:
+    post:
+      tags:
+      - Admin
+      summary: Add an SSH public key to user's account
+      operationId: adminCreatePublicKey
+      parameters:
+      - description: username of the user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/PublicKey'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateKeyOption'
+  /admin/users/{username}/keys/{id}:
+    delete:
+      tags:
+      - Admin
+      summary: Remove a public key from user's account
+      operationId: adminDeleteUserPublicKey
+      parameters:
+      - description: username of user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: id of the key to delete
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+  /admin/users/{username}/orgs:
+    post:
+      tags:
+      - Admin
+      summary: Create an organization
+      operationId: adminCreateOrg
+      parameters:
+      - description: username of the user that will own the created organization
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Organization'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrgOption'
+        required: true
+  /admin/users/{username}/quota:
+    get:
+      tags:
+      - Admin
+      summary: Get the user's quota info
+      operationId: adminGetUserQuota
+      parameters:
+      - description: username of user to query
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/QuotaInfo'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+  /admin/users/{username}/quota/groups:
+    post:
+      tags:
+      - Admin
+      summary: Set the user's quota groups to a given list
+      operationId: adminSetUserQuotaGroups
+      parameters:
+      - description: username of the user to modify the quota groups from
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetUserQuotaGroupsOptions'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/SetUserQuotaGroupsOptions'
+        description: list of groups that the user should be a member of
+        required: true
+  /admin/users/{username}/rename:
+    post:
+      tags:
+      - Admin
+      summary: Rename a user
+      operationId: adminRenameUser
+      parameters:
+      - description: existing username of user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenameUserOption'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/RenameUserOption'
+        required: true
+  /admin/users/{username}/repos:
+    post:
+      tags:
+      - Admin
+      summary: Create a repository on behalf of a user
+      operationId: adminCreateRepo
+      parameters:
+      - description: username of the user. This user will own the created repository
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Repository'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '409':
+          $ref: '#/components/responses/error'
+        '422':
+          $ref: '#/components/responses/validationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRepoOption'
+        required: true
+  /admin/users/{username}/tokens:
+    get:
+      tags:
+      - Admin
+      summary: List the specified user's access tokens
+      operationId: adminListUserAccessTokens
+      parameters:
+      - description: username of user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: page number of results to return (1-based)
+        name: page
+        in: query
+        schema:
+          type: integer
+      - description: page size of results
+        name: limit
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessTokenList'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+    post:
+      tags:
+      - Admin
+      summary: Create an access token for the specified user
+      operationId: adminCreateUserAccessToken
+      parameters:
+      - description: username of user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/AccessToken'
+        '400':
+          $ref: '#/components/responses/error'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccessTokenOption'
+  /admin/users/{username}/tokens/{token}:
+    delete:
+      tags:
+      - Admin
+      summary: Delete an access token for the specified user
+      operationId: adminDeleteUserAccessToken
+      parameters:
+      - description: username of user
+        name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: token to be deleted, identified by ID and if not available by name
+        name: token
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/empty'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '422':
+          $ref: '#/components/responses/error'
+components:
+  schemas:
+    PublicKey:
+      description: PublicKey publickey is a user key to push code to repository
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        fingerprint:
+          type: string
+          x-go-name: Fingerprint
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        key:
+          type: string
+          x-go-name: Key
+        key_type:
+          type: string
+          x-go-name: KeyType
+        read_only:
+          type: boolean
+          x-go-name: ReadOnly
+        title:
+          type: string
+          x-go-name: Title
+        updated_at:
+          type: string
+          format: date-time
+          x-go-name: Updated
+        url:
+          type: string
+          x-go-name: URL
+        user:
+          $ref: '#/components/schemas/User'
+        verified:
+          type: boolean
+          x-go-name: Verified
+      x-go-package: forgejo.org/modules/structs
+    QuotaGroup:
+      description: QuotaGroup represents a quota group
+      type: object
+      properties:
+        name:
+          description: Name of the group
+          type: string
+          x-go-name: Name
+        rules:
+          description: Rules associated with the group
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaRuleInfo'
+          x-go-name: Rules
+      x-go-package: forgejo.org/modules/structs
+    CreateHookOption:
+      description: CreateHookOption options when create a hook
+      type: object
+      required:
+      - type
+      - config
+      properties:
+        active:
+          type: boolean
+          default: false
+          x-go-name: Active
+        authorization_header:
+          type: string
+          x-go-name: AuthorizationHeader
+        branch_filter:
+          type: string
+          x-go-name: BranchFilter
+        config:
+          $ref: '#/components/schemas/CreateHookOptionConfig'
+        events:
+          type: array
+          items:
+            type: string
+          x-go-name: Events
+        type:
+          type: string
+          enum:
+          - forgejo
+          - dingtalk
+          - discord
+          - gitea
+          - gogs
+          - msteams
+          - slack
+          - telegram
+          - feishu
+          - wechatwork
+          - packagist
+          x-go-name: Type
+      x-go-package: forgejo.org/modules/structs
+    RepoTransfer:
+      description: RepoTransfer represents a pending repo transfer
+      type: object
+      properties:
+        doer:
+          $ref: '#/components/schemas/User'
+        recipient:
+          $ref: '#/components/schemas/User'
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+          x-go-name: Teams
+      x-go-package: forgejo.org/modules/structs
+    CreateKeyOption:
+      description: CreateKeyOption options when creating a key
+      type: object
+      required:
+      - title
+      - key
+      properties:
+        key:
+          description: An armored SSH key to add
+          type: string
+          uniqueItems: true
+          x-go-name: Key
+        read_only:
+          description: Describe if the key has only read access or read/write
+          type: boolean
+          x-go-name: ReadOnly
+        title:
+          description: Title of the key to add
+          type: string
+          uniqueItems: true
+          x-go-name: Title
+      x-go-package: forgejo.org/modules/structs
+    User:
+      description: User represents a user
+      type: object
+      properties:
+        active:
+          description: Is user active
+          type: boolean
+          x-go-name: IsActive
+        avatar_url:
+          description: URL to the user's avatar
+          type: string
+          x-go-name: AvatarURL
+        created:
+          type: string
+          format: date-time
+          x-go-name: Created
+        description:
+          description: the user's description
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          format: email
+          x-go-name: Email
+        followers_count:
+          description: user counts
+          type: integer
+          format: int64
+          x-go-name: Followers
+        following_count:
+          type: integer
+          format: int64
+          x-go-name: Following
+        full_name:
+          description: the user's full name
+          type: string
+          x-go-name: FullName
+        html_url:
+          description: URL to the user's profile page
+          type: string
+          x-go-name: HTMLURL
+        id:
+          description: the user's id
+          type: integer
+          format: int64
+          x-go-name: ID
+        is_admin:
+          description: Is the user an administrator
+          type: boolean
+          x-go-name: IsAdmin
+        language:
+          description: User locale
+          type: string
+          x-go-name: Language
+        last_login:
+          type: string
+          format: date-time
+          x-go-name: LastLogin
+        location:
+          description: the user's location
+          type: string
+          x-go-name: Location
+        login:
+          description: the user's username
+          type: string
+          x-go-name: UserName
+        login_name:
+          description: the user's authentication sign-in name.
+          type: string
+          default: empty
+          x-go-name: LoginName
+        prohibit_login:
+          description: Is user login prohibited
+          type: boolean
+          x-go-name: ProhibitLogin
+        pronouns:
+          description: the user's pronouns
+          type: string
+          x-go-name: Pronouns
+        restricted:
+          description: Is user restricted
+          type: boolean
+          x-go-name: Restricted
+        source_id:
+          description: The ID of the user's Authentication Source
+          type: integer
+          format: int64
+          x-go-name: SourceID
+        starred_repos_count:
+          type: integer
+          format: int64
+          x-go-name: StarredRepos
+        visibility:
+          description: 'User visibility level option: public, limited, private'
+          type: string
+          x-go-name: Visibility
+        website:
+          description: the user's website
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    QuotaInfo:
+      description: QuotaInfo represents information about a user's quota
+      type: object
+      properties:
+        groups:
+          $ref: '#/components/schemas/QuotaGroupList'
+        used:
+          $ref: '#/components/schemas/QuotaUsed'
+      x-go-package: forgejo.org/modules/structs
+    EditUserOption:
+      description: EditUserOption edit user options
+      type: object
+      properties:
+        active:
+          type: boolean
+          x-go-name: Active
+        admin:
+          type: boolean
+          x-go-name: Admin
+        allow_create_organization:
+          type: boolean
+          x-go-name: AllowCreateOrganization
+        allow_git_hook:
+          type: boolean
+          x-go-name: AllowGitHook
+        allow_import_local:
+          type: boolean
+          x-go-name: AllowImportLocal
+        description:
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          format: email
+          x-go-name: Email
+        full_name:
+          type: string
+          x-go-name: FullName
+        hide_email:
+          type: boolean
+          x-go-name: HideEmail
+        location:
+          type: string
+          x-go-name: Location
+        login_name:
+          type: string
+          x-go-name: LoginName
+        max_repo_creation:
+          type: integer
+          format: int64
+          x-go-name: MaxRepoCreation
+        must_change_password:
+          type: boolean
+          x-go-name: MustChangePassword
+        password:
+          type: string
+          x-go-name: Password
+        prohibit_login:
+          type: boolean
+          x-go-name: ProhibitLogin
+        pronouns:
+          type: string
+          x-go-name: Pronouns
+        restricted:
+          type: boolean
+          x-go-name: Restricted
+        source_id:
+          type: integer
+          format: int64
+          x-go-name: SourceID
+        visibility:
+          type: string
+          x-go-name: Visibility
+        website:
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    Cron:
+      description: Cron represents a Cron task
+      type: object
+      properties:
+        exec_times:
+          type: integer
+          format: int64
+          x-go-name: ExecTimes
+        name:
+          type: string
+          x-go-name: Name
+        next:
+          type: string
+          format: date-time
+          x-go-name: Next
+        prev:
+          type: string
+          format: date-time
+          x-go-name: Prev
+        schedule:
+          type: string
+          x-go-name: Schedule
+      x-go-package: forgejo.org/modules/structs
+    RenameUserOption:
+      description: RenameUserOption options when renaming a user
+      type: object
+      required:
+      - new_username
+      properties:
+        new_username:
+          description: New username for this user. This name cannot be in use yet by any other user.
+          type: string
+          uniqueItems: true
+          x-go-name: NewName
+      x-go-package: forgejo.org/modules/structs
+    Team:
+      description: Team represents a team in an organization
+      type: object
+      properties:
+        can_create_org_repo:
+          type: boolean
+          x-go-name: CanCreateOrgRepo
+        description:
+          type: string
+          x-go-name: Description
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        includes_all_repositories:
+          type: boolean
+          x-go-name: IncludesAllRepositories
+        name:
+          type: string
+          x-go-name: Name
+        organization:
+          $ref: '#/components/schemas/Organization'
+        permission:
+          type: string
+          enum:
+          - none
+          - read
+          - write
+          - admin
+          - owner
+          x-go-name: Permission
+        units:
+          type: array
+          items:
+            type: string
+          x-go-name: Units
+          example:
+          - repo.code
+          - repo.issues
+          - repo.ext_issues
+          - repo.wiki
+          - repo.pulls
+          - repo.releases
+          - repo.projects
+          - repo.ext_wiki
+        units_map:
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: UnitsMap
+          example:
+            repo.actions: none
+            repo.code: read
+            repo.ext_issues: none
+            repo.ext_wiki: none
+            repo.issues: write
+            repo.packages: none
+            repo.projects: none
+            repo.pulls: owner
+            repo.releases: none
+            repo.wiki: admin
+      x-go-package: forgejo.org/modules/structs
+    RegisterRunnerResponse:
+      type: object
+      title: RegisterRunnerResponse contains the details of the just registered runner.
+      properties:
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        token:
+          type: string
+          x-go-name: Token
+        uuid:
+          type: string
+          x-go-name: UUID
+      x-go-package: forgejo.org/modules/structs
+    CreateRepoOption:
+      description: CreateRepoOption options when creating repository
+      type: object
+      required:
+      - name
+      properties:
+        auto_init:
+          description: Whether the repository should be auto-initialized?
+          type: boolean
+          x-go-name: AutoInit
+        default_branch:
+          description: DefaultBranch of the repository (used when initializes and in template)
+          type: string
+          x-go-name: DefaultBranch
+        description:
+          description: Description of the repository to create
+          type: string
+          x-go-name: Description
+        gitignores:
+          description: Gitignores to use, separated by commas
+          type: string
+          x-go-name: Gitignores
+        issue_labels:
+          description: Label-Set to use
+          type: string
+          x-go-name: IssueLabels
+        license:
+          description: License to use
+          type: string
+          x-go-name: License
+        name:
+          description: Name of the repository to create
+          type: string
+          uniqueItems: true
+          x-go-name: Name
+        object_format_name:
+          description: ObjectFormatName of the underlying git repository
+          type: string
+          enum:
+          - sha1
+          - sha256
+          x-go-name: ObjectFormatName
+        private:
+          description: Whether the repository is private
+          type: boolean
+          x-go-name: Private
+        readme:
+          description: Readme of the repository to create
+          type: string
+          x-go-name: Readme
+        template:
+          description: Whether the repository is template
+          type: boolean
+          x-go-name: Template
+        trust_model:
+          description: TrustModel of the repository
+          type: string
+          enum:
+          - default
+          - collaborator
+          - committer
+          - collaboratorcommitter
+          x-go-name: TrustModel
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSizeAssetsPackages:
+      description: QuotaUsedSizeAssetsPackages represents the size-based package quota usage of a user
+      type: object
+      properties:
+        all:
+          description: Storage suze used for the user's packages
+          type: integer
+          format: int64
+          x-go-name: All
+      x-go-package: forgejo.org/modules/structs
+    APIValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    RegisterRunnerOptions:
+      type: object
+      title: RegisterRunnerOptions declares the accepted options for registering runners.
+      required:
+      - name
+      properties:
+        description:
+          description: Description of the runner to register.
+          type: string
+          x-go-name: Description
+        ephemeral:
+          description: Register as ephemeral runner https://forgejo.org/docs/latest/admin/actions/security/#ephemeral-runner
+          type: boolean
+          x-go-name: Ephemeral
+        name:
+          description: Name of the runner to register. The name of the runner does not have to be unique.
+          type: string
+          x-go-name: Name
+      x-go-package: forgejo.org/modules/structs
+    APINotFound:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          x-go-name: Errors
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    ExternalWiki:
+      description: ExternalWiki represents setting for external wiki
+      type: object
+      properties:
+        external_wiki_url:
+          description: URL of external wiki.
+          type: string
+          x-go-name: ExternalWikiURL
+      x-go-package: forgejo.org/modules/structs
+    CreateQuotaGroupOptions:
+      description: CreateQutaGroupOptions represents the options for creating a quota group
+      type: object
+      properties:
+        name:
+          description: Name of the quota group to create
+          type: string
+          x-go-name: Name
+        rules:
+          description: 'Rules to add to the newly created group.
+
+            If a rule does not exist, it will be created.'
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateQuotaRuleOptions'
+          x-go-name: Rules
+      x-go-package: forgejo.org/modules/structs
+    Hook:
+      description: Hook a hook is a web hook when one repository changed
+      type: object
+      properties:
+        active:
+          type: boolean
+          x-go-name: Active
+        authorization_header:
+          type: string
+          x-go-name: AuthorizationHeader
+        branch_filter:
+          type: string
+          x-go-name: BranchFilter
+        config:
+          description: 'Deprecated: use Metadata instead'
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: Config
+        content_type:
+          type: string
+          x-go-name: ContentType
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        events:
+          type: array
+          items:
+            type: string
+          x-go-name: Events
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        metadata:
+          x-go-name: Metadata
+        type:
+          type: string
+          x-go-name: Type
+        updated_at:
+          type: string
+          format: date-time
+          x-go-name: Updated
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/modules/structs
+    Organization:
+      description: Organization represents an organization
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          x-go-name: AvatarURL
+        created:
+          type: string
+          format: date-time
+          x-go-name: Created
+        description:
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          x-go-name: Email
+        full_name:
+          type: string
+          x-go-name: FullName
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        location:
+          type: string
+          x-go-name: Location
+        name:
+          type: string
+          x-go-name: Name
+        repo_admin_change_team_access:
+          type: boolean
+          x-go-name: RepoAdminChangeTeamAccess
+        username:
+          description: deprecated
+          type: string
+          x-go-name: UserName
+        visibility:
+          type: string
+          x-go-name: Visibility
+        website:
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    CreateAccessTokenOption:
+      description: CreateAccessTokenOption options when create access token
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          x-go-name: Name
+        repositories:
+          description: If provided and not-empty, creates an access token with access only to specified repositories.
+          type: array
+          items:
+            $ref: '#/components/schemas/RepoTargetOption'
+          x-go-name: Repositories
+        scopes:
+          type: array
+          items:
+            type: string
+          x-go-name: Scopes
+          example:
+          - all
+          - read:activitypub
+          - read:issue
+          - write:misc
+          - read:notification
+          - read:organization
+          - read:package
+          - read:repository
+          - read:user
+      x-go-package: forgejo.org/modules/structs
+    ActionRunner:
+      description: ActionRunner represents a runner
+      type: object
+      properties:
+        description:
+          description: Description provides optional details about this runner.
+          type: string
+          x-go-name: Description
+        ephemeral:
+          description: Indicates if runner is ephemeral runner
+          type: boolean
+          x-go-name: Ephemeral
+        id:
+          description: ID uniquely identifies this runner.
+          type: integer
+          format: int64
+          x-go-name: ID
+        labels:
+          description: Labels is a list of labels attached to this runner.
+          type: array
+          items:
+            type: string
+          x-go-name: Labels
+        name:
+          description: Name of the runner; not unique.
+          type: string
+          x-go-name: Name
+        owner_id:
+          description: 'OwnerID is the identifier of the user or organization this runner belongs to. O if the runner is owned by a
+
+            repository.'
+          type: integer
+          format: int64
+          x-go-name: OwnerID
+        repo_id:
+          description: 'RepoID is the identifier of the repository this runner belongs to. 0 if the runner belongs to a user or
+
+            organization.'
+          type: integer
+          format: int64
+          x-go-name: RepoID
+        status:
+          description: Status indicates whether this runner is offline, or active, for example.
+          type: string
+          enum:
+          - offline
+          - idle
+          - active
+          x-go-name: Status
+        uuid:
+          description: UUID uniquely identifies this runner.
+          type: string
+          x-go-name: UUID
+        version:
+          description: Version is the self-reported version string of Forgejo Runner.
+          type: string
+          x-go-name: Version
+      x-go-package: forgejo.org/modules/structs
+    EditQuotaRuleOptions:
+      description: EditQuotaRuleOptions represents the options for editing a quota rule
+      type: object
+      properties:
+        limit:
+          description: The limit set by the rule
+          type: integer
+          format: int64
+          x-go-name: Limit
+        subjects:
+          description: The subjects affected by the rule
+          type: array
+          items:
+            type: string
+          x-go-name: Subjects
+      x-go-package: forgejo.org/modules/structs
+    InternalTracker:
+      description: InternalTracker represents settings for internal tracker
+      type: object
+      properties:
+        allow_only_contributors_to_track_time:
+          description: Let only contributors track time (Built-in issue tracker)
+          type: boolean
+          x-go-name: AllowOnlyContributorsToTrackTime
+        enable_issue_dependencies:
+          description: Enable dependencies for issues and pull requests (Built-in issue tracker)
+          type: boolean
+          x-go-name: EnableIssueDependencies
+        enable_time_tracker:
+          description: Enable time tracking (Built-in issue tracker)
+          type: boolean
+          x-go-name: EnableTimeTracker
+      x-go-package: forgejo.org/modules/structs
+    Permission:
+      description: Permission represents a set of permissions
+      type: object
+      properties:
+        admin:
+          type: boolean
+          x-go-name: Admin
+        pull:
+          type: boolean
+          x-go-name: Pull
+        push:
+          type: boolean
+          x-go-name: Push
+      x-go-package: forgejo.org/modules/structs
+    CreateUserOption:
+      description: CreateUserOption create user options
+      type: object
+      required:
+      - username
+      - email
+      properties:
+        created_at:
+          description: 'For explicitly setting the user creation timestamp. Useful when users are
+
+            migrated from other systems. When omitted, the user''s creation timestamp
+
+            will be set to "now".'
+          type: string
+          format: date-time
+          x-go-name: Created
+        email:
+          type: string
+          format: email
+          x-go-name: Email
+        full_name:
+          type: string
+          x-go-name: FullName
+        login_name:
+          type: string
+          x-go-name: LoginName
+        must_change_password:
+          type: boolean
+          x-go-name: MustChangePassword
+        password:
+          type: string
+          x-go-name: Password
+        restricted:
+          type: boolean
+          x-go-name: Restricted
+        send_notify:
+          type: boolean
+          x-go-name: SendNotify
+        source_id:
+          type: integer
+          format: int64
+          x-go-name: SourceID
+        username:
+          type: string
+          x-go-name: Username
+        visibility:
+          type: string
+          x-go-name: Visibility
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSizeAssetsAttachments:
+      description: QuotaUsedSizeAssetsAttachments represents the size-based attachment quota usage of a user
+      type: object
+      properties:
+        issues:
+          description: Storage size used for the user's issue & comment attachments
+          type: integer
+          format: int64
+          x-go-name: Issues
+        releases:
+          description: Storage size used for the user's release attachments
+          type: integer
+          format: int64
+          x-go-name: Releases
+      x-go-package: forgejo.org/modules/structs
+    AccessToken:
+      type: object
+      title: AccessToken represents an API access token.
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        name:
+          type: string
+          x-go-name: Name
+        repositories:
+          description: 'Indicates that an access token only has access to the specified repositories.  Will be null if the access token
+
+            is not limited to a set of specified repositories.'
+          type: array
+          items:
+            $ref: '#/components/schemas/RepositoryMeta'
+          x-go-name: Repositories
+        scopes:
+          type: array
+          items:
+            type: string
+          x-go-name: Scopes
+        sha1:
+          type: string
+          x-go-name: Token
+        token_last_eight:
+          type: string
+          x-go-name: TokenLastEight
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSizeAssets:
+      description: QuotaUsedSizeAssets represents the size-based asset usage of a user
+      type: object
+      properties:
+        artifacts:
+          description: Storage size used for the user's artifacts
+          type: integer
+          format: int64
+          x-go-name: Artifacts
+        attachments:
+          $ref: '#/components/schemas/QuotaUsedSizeAssetsAttachments'
+        packages:
+          $ref: '#/components/schemas/QuotaUsedSizeAssetsPackages'
+      x-go-package: forgejo.org/modules/structs
+    CreateQuotaRuleOptions:
+      description: CreateQuotaRuleOptions represents the options for creating a quota rule
+      type: object
+      properties:
+        limit:
+          description: The limit set by the rule
+          type: integer
+          format: int64
+          x-go-name: Limit
+        name:
+          description: Name of the rule to create
+          type: string
+          x-go-name: Name
+        subjects:
+          description: The subjects affected by the rule
+          type: array
+          items:
+            type: string
+          x-go-name: Subjects
+      x-go-package: forgejo.org/modules/structs
+    ExternalTracker:
+      description: ExternalTracker represents settings for external tracker
+      type: object
+      properties:
+        external_tracker_format:
+          description: External Issue Tracker URL Format. Use the placeholders {user}, {repo} and {index} for the username, repository name and issue index.
+          type: string
+          x-go-name: ExternalTrackerFormat
+        external_tracker_regexp_pattern:
+          description: External Issue Tracker issue regular expression
+          type: string
+          x-go-name: ExternalTrackerRegexpPattern
+        external_tracker_style:
+          description: External Issue Tracker Number Format, either `numeric`, `alphanumeric`, or `regexp`
+          type: string
+          x-go-name: ExternalTrackerStyle
+        external_tracker_url:
+          description: URL of external issue tracker.
+          type: string
+          x-go-name: ExternalTrackerURL
+      x-go-package: forgejo.org/modules/structs
+    APIError:
+      description: APIError is an api error with a message
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/modules/structs
+    APIUnauthorizedError:
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    Email:
+      description: Email an email address belonging to a user
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          x-go-name: Email
+        primary:
+          type: boolean
+          x-go-name: Primary
+        user_id:
+          type: integer
+          format: int64
+          x-go-name: UserID
+        username:
+          type: string
+          x-go-name: UserName
+        verified:
+          type: boolean
+          x-go-name: Verified
+      x-go-package: forgejo.org/modules/structs
+    RegistrationToken:
+      description: RegistrationToken is a string used to register a runner with a server
+      type: object
+      properties:
+        token:
+          type: string
+          x-go-name: Token
+      x-go-package: forgejo.org/routers/api/v1/shared
+    QuotaUsedSizeRepos:
+      description: QuotaUsedSizeRepos represents the size-based repository quota usage of a user
+      type: object
+      properties:
+        private:
+          description: Storage size of the user's private repositories
+          type: integer
+          format: int64
+          x-go-name: Private
+        public:
+          description: Storage size of the user's public repositories
+          type: integer
+          format: int64
+          x-go-name: Public
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsed:
+      description: QuotaUsed represents the quota usage of a user
+      type: object
+      properties:
+        size:
+          $ref: '#/components/schemas/QuotaUsedSize'
+      x-go-package: forgejo.org/modules/structs
+    QuotaGroupList:
+      description: QuotaGroupList represents a list of quota groups
+      type: array
+      items:
+        $ref: '#/components/schemas/QuotaGroup'
+      x-go-package: forgejo.org/modules/structs
+    QuotaRuleInfo:
+      description: QuotaRuleInfo contains information about a quota rule
+      type: object
+      properties:
+        limit:
+          description: The limit set by the rule
+          type: integer
+          format: int64
+          x-go-name: Limit
+        name:
+          description: Name of the rule (only shown to admins)
+          type: string
+          x-go-name: Name
+        subjects:
+          description: Subjects the rule affects
+          type: array
+          items:
+            type: string
+          x-go-name: Subjects
+      x-go-package: forgejo.org/modules/structs
+    RepositoryMeta:
+      description: RepositoryMeta basic repository information
+      type: object
+      properties:
+        full_name:
+          type: string
+          x-go-name: FullName
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        name:
+          type: string
+          x-go-name: Name
+        owner:
+          type: string
+          x-go-name: Owner
+      x-go-package: forgejo.org/modules/structs
+    ActionRunJob:
+      description: ActionRunJob represents a job of a run
+      type: object
+      properties:
+        attempt:
+          description: How many times the job has been attempted including the current attempt.
+          type: integer
+          format: int64
+          x-go-name: Attempt
+        handle:
+          description: Opaque identifier that uniquely identifies a single attempt of a job.
+          type: string
+          x-go-name: Handle
+        id:
+          description: Identifier of this job.
+          type: integer
+          format: int64
+          x-go-name: ID
+        name:
+          description: the action run job name
+          type: string
+          x-go-name: Name
+        needs:
+          description: the action run job needed ids
+          type: array
+          items:
+            type: string
+          x-go-name: Needs
+        owner_id:
+          description: the owner id
+          type: integer
+          format: int64
+          x-go-name: OwnerID
+        repo_id:
+          description: the repository id
+          type: integer
+          format: int64
+          x-go-name: RepoID
+        run_id:
+          description: Identifier of the workflow run this job belongs to.
+          type: integer
+          format: int64
+          x-go-name: RunID
+        runs_on:
+          description: the action run job labels to run on
+          type: array
+          items:
+            type: string
+          x-go-name: RunsOn
+        status:
+          description: the action run job status
+          type: string
+          x-go-name: Status
+        task_id:
+          description: the action run job latest task id
+          type: integer
+          format: int64
+          x-go-name: TaskID
+      x-go-package: forgejo.org/modules/structs
+    DeleteEmailOption:
+      description: DeleteEmailOption options when deleting email addresses
+      type: object
+      properties:
+        emails:
+          description: email addresses to delete
+          type: array
+          items:
+            type: string
+          x-go-name: Emails
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSize:
+      description: QuotaUsedSize represents the size-based quota usage of a user
+      type: object
+      properties:
+        assets:
+          $ref: '#/components/schemas/QuotaUsedSizeAssets'
+        git:
+          $ref: '#/components/schemas/QuotaUsedSizeGit'
+        repos:
+          $ref: '#/components/schemas/QuotaUsedSizeRepos'
+      x-go-package: forgejo.org/modules/structs
+    EditHookOption:
+      description: EditHookOption options when modify one hook
+      type: object
+      properties:
+        active:
+          type: boolean
+          x-go-name: Active
+        authorization_header:
+          type: string
+          x-go-name: AuthorizationHeader
+        branch_filter:
+          type: string
+          x-go-name: BranchFilter
+        config:
+          type: object
+          additionalProperties:
+            type: string
+          x-go-name: Config
+        events:
+          type: array
+          items:
+            type: string
+          x-go-name: Events
+      x-go-package: forgejo.org/modules/structs
+    APIForbiddenError:
+      type: object
+      properties:
+        message:
+          type: string
+          x-go-name: Message
+        url:
+          type: string
+          x-go-name: URL
+      x-go-package: forgejo.org/services/context
+    RepoTargetOption:
+      type: object
+      required:
+      - owner
+      - name
+      properties:
+        name:
+          description: Name of repository
+          type: string
+          x-go-name: Name
+        owner:
+          description: Name of user or organisation that owns the repository
+          type: string
+          x-go-name: Owner
+      x-go-package: forgejo.org/modules/structs
+    SetUserQuotaGroupsOptions:
+      description: SetUserQuotaGroupsOptions represents the quota groups of a user
+      type: object
+      required:
+      - groups
+      properties:
+        groups:
+          description: Quota groups the user shall have
+          type: array
+          items:
+            type: string
+          x-go-name: Groups
+      x-go-package: forgejo.org/modules/structs
+    Repository:
+      description: Repository represents a repository
+      type: object
+      properties:
+        allow_fast_forward_only_merge:
+          type: boolean
+          x-go-name: AllowFastForwardOnly
+        allow_merge_commits:
+          type: boolean
+          x-go-name: AllowMerge
+        allow_rebase:
+          type: boolean
+          x-go-name: AllowRebase
+        allow_rebase_explicit:
+          type: boolean
+          x-go-name: AllowRebaseMerge
+        allow_rebase_update:
+          type: boolean
+          x-go-name: AllowRebaseUpdate
+        allow_squash_merge:
+          type: boolean
+          x-go-name: AllowSquash
+        archived:
+          type: boolean
+          x-go-name: Archived
+        archived_at:
+          type: string
+          format: date-time
+          x-go-name: ArchivedAt
+        avatar_url:
+          type: string
+          x-go-name: AvatarURL
+        clone_url:
+          type: string
+          x-go-name: CloneURL
+        created_at:
+          type: string
+          format: date-time
+          x-go-name: Created
+        default_allow_maintainer_edit:
+          type: boolean
+          x-go-name: DefaultAllowMaintainerEdit
+        default_branch:
+          type: string
+          x-go-name: DefaultBranch
+        default_delete_branch_after_merge:
+          type: boolean
+          x-go-name: DefaultDeleteBranchAfterMerge
+        default_merge_style:
+          type: string
+          x-go-name: DefaultMergeStyle
+        default_update_style:
+          type: string
+          x-go-name: DefaultUpdateStyle
+        description:
+          type: string
+          x-go-name: Description
+        empty:
+          type: boolean
+          x-go-name: Empty
+        external_tracker:
+          $ref: '#/components/schemas/ExternalTracker'
+        external_wiki:
+          $ref: '#/components/schemas/ExternalWiki'
+        fork:
+          type: boolean
+          x-go-name: Fork
+        forks_count:
+          type: integer
+          format: int64
+          x-go-name: Forks
+        full_name:
+          type: string
+          x-go-name: FullName
+        globally_editable_wiki:
+          type: boolean
+          x-go-name: GloballyEditableWiki
+        has_actions:
+          type: boolean
+          x-go-name: HasActions
+        has_issues:
+          type: boolean
+          x-go-name: HasIssues
+        has_packages:
+          type: boolean
+          x-go-name: HasPackages
+        has_projects:
+          type: boolean
+          x-go-name: HasProjects
+        has_pull_requests:
+          type: boolean
+          x-go-name: HasPullRequests
+        has_releases:
+          type: boolean
+          x-go-name: HasReleases
+        has_wiki:
+          description: is the wiki enabled
+          type: boolean
+          x-go-name: HasWiki
+        has_wiki_contents:
+          description: have wiki pages ever been created
+          type: boolean
+          x-go-name: HasWikiContents
+        html_url:
+          type: string
+          x-go-name: HTMLURL
+        id:
+          type: integer
+          format: int64
+          x-go-name: ID
+        ignore_whitespace_conflicts:
+          type: boolean
+          x-go-name: IgnoreWhitespaceConflicts
+        internal:
+          type: boolean
+          x-go-name: Internal
+        internal_tracker:
+          $ref: '#/components/schemas/InternalTracker'
+        language:
+          type: string
+          x-go-name: Language
+        languages_url:
+          type: string
+          x-go-name: LanguagesURL
+        link:
+          type: string
+          x-go-name: Link
+        mirror:
+          type: boolean
+          x-go-name: Mirror
+        mirror_interval:
+          type: string
+          x-go-name: MirrorInterval
+        mirror_updated:
+          type: string
+          format: date-time
+          x-go-name: MirrorUpdated
+        name:
+          type: string
+          x-go-name: Name
+        object_format_name:
+          description: ObjectFormatName of the underlying git repository
+          type: string
+          enum:
+          - sha1
+          - sha256
+          x-go-name: ObjectFormatName
+        open_issues_count:
+          type: integer
+          format: int64
+          x-go-name: OpenIssues
+        open_pr_counter:
+          type: integer
+          format: int64
+          x-go-name: OpenPulls
+        original_url:
+          type: string
+          x-go-name: OriginalURL
+        owner:
+          $ref: '#/components/schemas/User'
+        parent:
+          $ref: '#/components/schemas/Repository'
+        permissions:
+          $ref: '#/components/schemas/Permission'
+        private:
+          type: boolean
+          x-go-name: Private
+        release_counter:
+          type: integer
+          format: int64
+          x-go-name: Releases
+        repo_transfer:
+          $ref: '#/components/schemas/RepoTransfer'
+        size:
+          type: integer
+          format: int64
+          x-go-name: Size
+        ssh_url:
+          type: string
+          x-go-name: SSHURL
+        stars_count:
+          type: integer
+          format: int64
+          x-go-name: Stars
+        template:
+          type: boolean
+          x-go-name: Template
+        topics:
+          type: array
+          items:
+            type: string
+          x-go-name: Topics
+        updated_at:
+          type: string
+          format: date-time
+          x-go-name: Updated
+        url:
+          type: string
+          x-go-name: URL
+        watchers_count:
+          type: integer
+          format: int64
+          x-go-name: Watchers
+        website:
+          type: string
+          x-go-name: Website
+        wiki_branch:
+          type: string
+          x-go-name: WikiBranch
+        wiki_clone_url:
+          type: string
+          x-go-name: WikiCloneURL
+        wiki_ssh_url:
+          type: string
+          x-go-name: WikiSSHURL
+      x-go-package: forgejo.org/modules/structs
+    CreateHookOptionConfig:
+      description: 'CreateHookOptionConfig has all config options in it
+
+        required are "content_type" and "url" Required'
+      type: object
+      additionalProperties:
+        type: string
+      x-go-package: forgejo.org/modules/structs
+    CreateOrgOption:
+      description: CreateOrgOption options for creating an organization
+      type: object
+      required:
+      - username
+      properties:
+        description:
+          type: string
+          x-go-name: Description
+        email:
+          type: string
+          x-go-name: Email
+        full_name:
+          type: string
+          x-go-name: FullName
+        location:
+          type: string
+          x-go-name: Location
+        repo_admin_change_team_access:
+          type: boolean
+          x-go-name: RepoAdminChangeTeamAccess
+        username:
+          type: string
+          x-go-name: UserName
+        visibility:
+          description: possible values are `public` (default), `limited` or `private`
+          type: string
+          enum:
+          - public
+          - limited
+          - private
+          x-go-name: Visibility
+        website:
+          type: string
+          x-go-name: Website
+      x-go-package: forgejo.org/modules/structs
+    QuotaUsedSizeGit:
+      description: QuotaUsedSizeGit represents the size-based git (lfs) quota usage of a user
+      type: object
+      properties:
+        LFS:
+          description: Storage size of the user's Git LFS objects
+          type: integer
+          format: int64
+      x-go-package: forgejo.org/modules/structs
+  responses:
+    OrganizationList:
+      description: OrganizationList
+      headers:
+        X-Total-Count:
+          description: The total number of organizations
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Organization'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Organization'
+    QuotaRuleInfoList:
+      description: QuotaRuleInfoList
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/QuotaRuleInfo'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/QuotaRuleInfo'
+    QuotaInfo:
+      description: QuotaInfo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuotaInfo'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/QuotaInfo'
+    RegisterRunnerResponse:
+      description: RegisterRunnerResponse contains the details of the just registered runner.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterRunnerResponse'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/RegisterRunnerResponse'
+    CronList:
+      description: CronList
+      headers:
+        X-Total-Count:
+          description: The total number of cron jobs
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Cron'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Cron'
+    Organization:
+      description: Organization
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Organization'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/Organization'
+    PublicKey:
+      description: PublicKey
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PublicKey'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/PublicKey'
+    EmailList:
+      description: EmailList
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Email'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Email'
+    UserList:
+      description: UserList
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+    error:
+      description: APIError is error format response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIError'
+    validationError:
+      description: APIValidationError is error format response related to input validation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIValidationError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIValidationError'
+    ActionRunner:
+      description: ActionRunner represents a runner
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ActionRunner'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/ActionRunner'
+    QuotaRuleInfo:
+      description: QuotaRuleInfo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuotaRuleInfo'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/QuotaRuleInfo'
+    forbidden:
+      description: APIForbiddenError is a forbidden error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIForbiddenError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIForbiddenError'
+    HookListWithoutPagination:
+      description: HookListWithoutPagination - Hooks without pagination headers
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Hook'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Hook'
+    RegistrationToken:
+      description: RegistrationToken is a string used to register a runner with a server
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegistrationToken'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/RegistrationToken'
+    User:
+      description: User
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/User'
+    ActionRunnerList:
+      description: ActionRunnerList is a list of Forgejo Action runners
+      headers:
+        Link:
+          description: Links to other pages, if any
+          schema:
+            type: string
+        X-Total-Count:
+          description: Total number of runners matching the search criteria (excluding page and limit)
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionRunner'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionRunner'
+    StringSlice:
+      description: StringSlice
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+        text/html:
+          schema:
+            type: array
+            items:
+              type: string
+    Hook:
+      description: Hook
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Hook'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/Hook'
+    AccessTokenList:
+      description: AccessTokenList
+      headers:
+        X-Total-Count:
+          description: The total number of access tokens
+          schema:
+            type: integer
+            format: int64
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/AccessToken'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/AccessToken'
+    Repository:
+      description: Repository
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Repository'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/Repository'
+    QuotaGroupList:
+      description: QuotaGroupList
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuotaGroupList'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/QuotaGroupList'
+    RunJobList:
+      description: RunJobList is a list of action run jobs
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionRunJob'
+        text/html:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionRunJob'
+    unauthorized:
+      description: APIUnauthorizedError is a unauthorized error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIUnauthorizedError'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APIUnauthorizedError'
+    empty:
+      description: APIEmpty is an empty response
+    AccessToken:
+      description: AccessToken represents an API access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccessToken'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/AccessToken'
+    QuotaGroup:
+      description: QuotaGroup
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuotaGroup'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/QuotaGroup'
+    notFound:
+      description: APINotFound is a not found error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APINotFound'
+        text/html:
+          schema:
+            $ref: '#/components/schemas/APINotFound'
+  securitySchemes:
+    AuthorizationHeaderToken:
+      description: API tokens must be prepended with "token" followed by a space.
+      type: apiKey
+      name: Authorization
+      in: header
+    BasicAuth:
+      type: http
+      scheme: basic
+    SudoHeader:
+      description: Sudo API request as the user provided as the key. Admin privileges are required.
+      type: apiKey
+      name: Sudo
+      in: header
+    SudoParam:
+      description: Sudo API request as the user provided as the key. Admin privileges are required.
+      type: apiKey
+      name: sudo
+      in: query
+    TOTPHeader:
+      description: Must be used in combination with BasicAuth if two-factor authentication is enabled.
+      type: apiKey
+      name: X-FORGEJO-OTP
+      in: header
