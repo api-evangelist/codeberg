@@ -1,4 +1,4 @@
-# Codeberg (codeberg)
+# Codeberg
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,183 +64,132 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Codeberg is a community-run, non-profit platform for hosting Git repositories and collaborating on free and open source software, operated by the Codeberg e.V. association in Germany. It runs on [Forgejo](https://forgejo.org/) (a community fork of Gitea) and exposes a Forgejo/Gitea-compatible REST API at `https://codeberg.org/api/v1` for repositories, issues, pull requests, releases, Git content, users, and organizations.
+Codeberg is a community-run, non-profit platform for hosting Git repositories and collaborating on free and open source software, operated by the Codeberg e.V. association in Germany. It runs on Forgejo (a community fork of Gitea) and exposes the Forgejo/Gitea-compatible REST API at https://codeberg.org/api/v1 for repositories, issues, pull requests, releases, Git content, users, and organizations. Access is free and donation-funded; requests authenticate with a personal access token or OAuth2.
 
-## Access model (read this first)
+**Areas:** Code Hosting · Git · Git Hosting · Version Control · Repositories · Pull Requests · Issue Tracking · Open Source · Forgejo · Non-Profit
 
-- **Free, donation-funded.** Codeberg is a registered non-profit. Hosting and the API are free to use; there are no paid API tiers. The service is sustained by donations and membership in Codeberg e.V. Use is expected to be for free and open source content and to stay within fair-use limits.
-- **Authentication.** Most read access to public repositories works unauthenticated. For authenticated and write access, send a **personal access token** as `Authorization: token YOUR_TOKEN` (note the literal word `token`, not `Bearer`). **OAuth2** is also supported for apps, as is HTTP Basic auth (optionally with a TOTP header when two-factor auth is enabled). Create tokens under your Codeberg account settings.
-- **Base URL.** `https://codeberg.org/api/v1`. The same API surface exists on any self-hosted Forgejo or Gitea instance.
-- **Fair use.** Codeberg asks that automated/API use be reasonable and not degrade the shared community service; heavy scraping or bulk automation is discouraged. There are no published fixed numeric rate limits, but the instance may throttle abusive traffic.
+## Codeberg on APIs.io
 
-**Live specification:** [https://codeberg.org/swagger.v1.json](https://codeberg.org/swagger.v1.json) (interactive UI at [https://codeberg.org/api/swagger](https://codeberg.org/api/swagger))
+Everything profiled for Codeberg is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/codeberg/](https://apis.io/providers/codeberg/)** — or go straight to one of the APIs or properties below.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/codeberg/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/codeberg/refs/heads/main/apis.yml)
+### APIs (8)
 
-## Tags
+- [Codeberg Git Content API](https://apis.io/apis/codeberg/codeberg-git-content-api/) — Read and write repository files, list commits, and read the Git tree.
+- [Codeberg Issues API](https://apis.io/apis/codeberg/codeberg-issues-api/) — List, search, create, get, edit, and comment on issues.
+- [Codeberg Miscellaneous API](https://apis.io/apis/codeberg/codeberg-miscellaneous-api/) — Server metadata.
+- [Codeberg Organizations API](https://apis.io/apis/codeberg/codeberg-organizations-api/) — Get and manage organizations and their repositories.
+- [Codeberg Pull Requests API](https://apis.io/apis/codeberg/codeberg-pull-requests-api/) — List, create, get, update, and merge pull requests.
+- [Codeberg Releases API](https://apis.io/apis/codeberg/codeberg-releases-api/) — Manage repository releases attached to Git tags.
+- [Codeberg Repositories API](https://apis.io/apis/codeberg/codeberg-repositories-api/) — Create, search, get, edit, and delete repositories and their branches and tags.
+- [Codeberg Users API](https://apis.io/apis/codeberg/codeberg-users-api/) — Look up and search users and the authenticated account.
 
-- Code Hosting
-- Git
-- Git Hosting
-- Version Control
-- Repositories
-- Pull Requests
-- Issue Tracking
-- Open Source
-- Forgejo
-- Non-Profit
+### Published properties
 
-## Timestamps
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- **Created:** 2026-07-12
-- **Modified:** 2026-07-12
+#### Agentic access (1)
 
-## APIs
+Which operations an agent can call, which act, and which need a human in the loop.
 
-### Codeberg Repositories API
+- [Codeberg Agentic Access](https://apis.io/agentic-access/codeberg/codeberg-agentic-access/)
 
-Create, search, get, edit, and delete Git repositories, and list and create branches and tags. The core repository surface of the Forgejo/Gitea API, covering both user-owned and organization-owned repositories.
+#### Collections (9)
 
-- **Human URL:** [https://codeberg.org/api/swagger](https://codeberg.org/api/swagger)
-- **Base URL:** `https://codeberg.org/api/v1`
+Postman and Open Collection request collections.
 
-#### Tags
+- [Codeberg API (Forgejo)](https://apis.io/collections/codeberg/open-codeberg/)
+- [Codeberg API (Forgejo) Git Content API](https://apis.io/collections/codeberg/open-codeberg-git-content-api/)
+- [Codeberg API (Forgejo) Git Content Issues API](https://apis.io/collections/codeberg/open-codeberg-issues-api/)
+- [Codeberg API (Forgejo) Git Content Miscellaneous API](https://apis.io/collections/codeberg/open-codeberg-miscellaneous-api/)
+- [Codeberg API (Forgejo) Git Content Organizations API](https://apis.io/collections/codeberg/open-codeberg-organizations-api/)
+- [Codeberg API (Forgejo) Git Content Pull Requests API](https://apis.io/collections/codeberg/open-codeberg-pull-requests-api/)
+- [Codeberg API (Forgejo) Git Content Releases API](https://apis.io/collections/codeberg/open-codeberg-releases-api/)
+- [Codeberg API (Forgejo) Git Content Repositories API](https://apis.io/collections/codeberg/open-codeberg-repositories-api/)
+- [Codeberg API (Forgejo) Git Content Users API](https://apis.io/collections/codeberg/open-codeberg-users-api/)
 
-- Repositories
-- Git Hosting
-- Branches
+#### Security (2)
 
-#### Properties
+Authentication, trust centre, and vulnerability disclosure.
 
-- [Documentation](https://docs.codeberg.org/advanced/api-usage/)
-- [API Reference](https://codeberg.org/api/swagger)
-- [OpenAPI](openapi/codeberg-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/codeberg.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/codeberg.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Codeberg Authentication](https://apis.io/security/codeberg/codeberg-authentication/)
+- [Codeberg Domain Security](https://apis.io/security/codeberg/codeberg-domain-security/)
 
-### Codeberg Issues API
+#### Plans and pricing (1)
 
-List, search, create, get, edit, and comment on issues within a repository. Supports cross-repository issue search across repositories the authenticated user can access.
+Published plans, tiers and prices.
 
-- **Human URL:** [https://codeberg.org/api/swagger](https://codeberg.org/api/swagger)
-- **Base URL:** `https://codeberg.org/api/v1`
+- [Codeberg Plans Pricing](https://apis.io/plans/codeberg/codeberg-plans-pricing/)
 
-#### Tags
+#### Rate limits (1)
 
-- Issue Tracking
-- Issues
-- Comments
+Published request limits.
 
-#### Properties
+- [Codeberg Rate Limits](https://apis.io/rate-limits/codeberg/codeberg-rate-limits/)
 
-- [Documentation](https://docs.codeberg.org/advanced/api-usage/)
-- [API Reference](https://codeberg.org/api/swagger)
-- [OpenAPI](openapi/codeberg-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/codeberg.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/codeberg.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### FinOps (1)
 
-### Codeberg Pull Requests API
+What the API costs to run, by operation.
 
-List, create, get, and update pull requests, check whether a pull request has been merged, and merge it. The code-review and contribution surface of the Forgejo/Gitea API.
+- [Codeberg Finops](https://apis.io/finops/codeberg/codeberg-finops/)
 
-- **Human URL:** [https://codeberg.org/api/swagger](https://codeberg.org/api/swagger)
-- **Base URL:** `https://codeberg.org/api/v1`
+## Where to find this API
 
-#### Tags
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- Pull Requests
-- Code Review
-- Merge
-
-#### Properties
-
-- [Documentation](https://docs.codeberg.org/advanced/api-usage/)
-- [API Reference](https://codeberg.org/api/swagger)
-- [OpenAPI](openapi/codeberg-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/codeberg.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/codeberg.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Codeberg Users and Organizations API
-
-Get the authenticated user, look up and search users, list who a user follows and is followed by, and get and manage organizations and the repositories they own.
-
-- **Human URL:** [https://codeberg.org/api/swagger](https://codeberg.org/api/swagger)
-- **Base URL:** `https://codeberg.org/api/v1`
-
-#### Tags
-
-- Users
-- Organizations
-- Profiles
-
-#### Properties
-
-- [Documentation](https://docs.codeberg.org/advanced/api-usage/)
-- [API Reference](https://codeberg.org/api/swagger)
-- [OpenAPI](openapi/codeberg-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/codeberg.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/codeberg.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Codeberg Releases API
-
-List, create, get, update, and delete repository releases, and fetch the latest non-prerelease release. Releases attach downloadable assets to Git tags.
-
-- **Human URL:** [https://codeberg.org/api/swagger](https://codeberg.org/api/swagger)
-- **Base URL:** `https://codeberg.org/api/v1`
-
-#### Tags
-
-- Releases
-- Tags
-- Distribution
-
-#### Properties
-
-- [Documentation](https://docs.codeberg.org/advanced/api-usage/)
-- [API Reference](https://codeberg.org/api/swagger)
-- [OpenAPI](openapi/codeberg-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/codeberg.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/codeberg.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Codeberg Git Content API
-
-Read and write repository contents - list directory entries, get and create, update, or delete files, fetch raw file bytes, list commits, and read the Git tree. The file-and-content surface of the Forgejo/Gitea API.
-
-- **Human URL:** [https://codeberg.org/api/swagger](https://codeberg.org/api/swagger)
-- **Base URL:** `https://codeberg.org/api/v1`
-
-#### Tags
-
-- Git Content
-- Files
-- Commits
-
-#### Properties
-
-- [Documentation](https://docs.codeberg.org/advanced/api-usage/)
-- [API Reference](https://codeberg.org/api/swagger)
-- [OpenAPI](openapi/codeberg-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/codeberg.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/codeberg.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [Domain Security](security/codeberg-domain-security.yml)
-- [Authentication](authentication/codeberg-authentication.yml)
-- [GitHub Organization](https://github.com/forgejo/forgejo)
-- [Fediverse](https://social.anoxinon.de/@codeberg)
 - [Website](https://codeberg.org)
 - [Documentation](https://docs.codeberg.org)
-- [Plans](plans/codeberg-plans-pricing.yml)
-- [Rate Limits](rate-limits/codeberg-rate-limits.yml)
-- [Fin Ops](finops/codeberg-finops.yml)
 - [Blog](https://blog.codeberg.org/)
+- [GitHub](https://github.com/forgejo/forgejo)
 
-## Review
+## API Evangelist rating
 
-An API Evangelist review of whether Codeberg exposes a documented public WebSocket API is in [review.yml](review.yml). Answer: **no** - Codeberg's API is REST over HTTPS with outbound webhooks for eventing; there is no documented `wss://` endpoint, so no AsyncAPI document was authored.
+**Kin Score 25.3** — emerging · rubric 0.24.0 · scored 2026-10-17
 
-## Maintainers
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 44.1 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 5.3 |
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Agent readiness 17.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 11.8** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/codeberg/](https://apis.io/providers/codeberg/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Codeberg: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/codeberg/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
